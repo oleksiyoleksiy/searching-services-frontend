@@ -7,13 +7,18 @@ import ServiceCard from '@/components/ServiceCard'
 import { Button } from '@/components/ui/Button'
 import { categories, serviceProviders } from '@/data/mockData'
 import { MapPin, Search, Star, ArrowRight, Calendar } from 'lucide-react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const Home = () => {
-  const [searchQuery, setSearchQuery] = useState({ service: '', location: '' })
+  // const [searchQuery, setSearchQuery] = useState({ service: '', location: '' })
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const handleSearch = (service: string, location: string) => {
-    setSearchQuery({ service, location })
-    console.log('Searching for:', service, 'in', location)
+    // setSearchParams({ service, location })
+    
+    navigate(`/search?service=${service}&location=${location}`)
+
     // In a real application, this would trigger an API call
   }
 
@@ -25,7 +30,6 @@ const Home = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <main className="flex-grow">
-        {/* Hero Section */}
         <section className="bg-hero-pattern py-12 md:py-24">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center mb-10">
@@ -57,7 +61,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Categories Section */}
         <section className="py-12 bg-white">
           <div className="container mx-auto px-4">
             <div className="flex justify-between items-center mb-8">

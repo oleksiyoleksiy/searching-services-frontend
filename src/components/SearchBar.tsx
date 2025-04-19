@@ -3,17 +3,27 @@ import { Search, MapPin, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 
+interface SearchBarInitialValues {
+  service: string
+  location: string
+}
+
 interface SearchBarProps {
   onSearch?: (service: string, location: string) => void
   simplified?: boolean
+  initialValues?: SearchBarInitialValues
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
   simplified = false,
+  initialValues = {
+    service: '',
+    location: '',
+  },
 }) => {
-  const [service, setService] = useState('')
-  const [location, setLocation] = useState('')
+  const [service, setService] = useState(initialValues.service)
+  const [location, setLocation] = useState(initialValues.location)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
