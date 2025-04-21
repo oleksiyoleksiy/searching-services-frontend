@@ -35,18 +35,17 @@ const FilterSection = () => {
   const [availability, setAvailability] = useState<AvailabilityType[]>([])
   const [rating, setRating] = useState<RatingType[]>([])
   const [searchParams, setSearchParams] = useSearchParams()
-
   const [showMobileFilters, setShowMobileFilters] = useState(false)
 
-  useEffect(() => {
-    const params = new URLSearchParams()
-    params.set('distance', distance.join(','))
-    params.set('priceRange', priceRange)
-    availability.forEach(val => params.append('availability', val))
-    rating.forEach(val => params.append('rating', val))
+  // useEffect(() => {
+  //   const params = new URLSearchParams()
+  //   params.set('distance', distance.join(','))
+  //   params.set('priceRange', priceRange)
+  //   availability.forEach(val => params.append('availability', val))
+  //   rating.forEach(val => params.append('rating', val))
 
-    setSearchParams(params)
-  }, [distance, priceRange, availability, rating])
+  //   setSearchParams(params)
+  // }, [distance, priceRange, availability, rating])
 
   const handleAvailabilityToggle = (value: AvailabilityType) => {
     setAvailability(prev =>
@@ -82,6 +81,19 @@ const FilterSection = () => {
     setAvailability([])
   }
 
+  const handleApplyFiltersButtonClick = () => {
+    const params = new URLSearchParams()
+    
+    if (searchParams.has('service')) params.set('service', searchParams.get('service') || '')
+    if (searchParams.has('location')) params.set('location', searchParams.get('location') || '')
+
+    params.set('distance', distance.join(','))
+    params.set('priceRange', priceRange)
+    availability.forEach(val => params.append('availability', val))
+    rating.forEach(val => params.append('rating', val))
+    setSearchParams(params)
+  }
+
   return (
     <>
       <div className="md:hidden mb-4">
@@ -92,7 +104,7 @@ const FilterSection = () => {
               Filters
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom" className="h-[80vh]">
+          <SheetContent side="bottom" className="h-[90vh]">
             <SheetHeader>
               <SheetTitle>Filter Results</SheetTitle>
             </SheetHeader>
@@ -108,16 +120,19 @@ const FilterSection = () => {
                 renderRatingCheckboxParams={renderRatingCheckboxParams}
               />
             </div>
-            <SheetFooter>
-              {/* <Button className="w-full bg-localfind-600 hover:bg-localfind-700">
+            <SheetFooter className='flex flex-col gap-2'>
+              <Button
+                onClick={handleApplyFiltersButtonClick}
+                className="w-full bg-localfind-600 hover:bg-localfind-700"
+              >
                 Apply Filters
-              </Button> */}
+              </Button>
               <Button
                 onClick={handleResetFiltersButtonClick}
                 variant="outline"
                 className="w-full"
               >
-                , Reset Filters
+                Reset Filters
               </Button>
             </SheetFooter>
           </SheetContent>
@@ -210,14 +225,21 @@ const FilterSection = () => {
             </div>
           </div>
         </div>
-
-        <Button
-          onClick={handleResetFiltersButtonClick}
-          variant="outline"
-          className="w-full"
-        >
-          Reset Filters
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button
+            onClick={handleResetFiltersButtonClick}
+            variant="outline"
+            className="w-full"
+          >
+            Reset Filters
+          </Button>
+          <Button
+            onClick={handleApplyFiltersButtonClick}
+            className="w-full bg-localfind-600 hover:bg-localfind-700"
+          >
+            Apply Filters
+          </Button>
+        </div>
       </div>
     </>
   )
@@ -312,7 +334,7 @@ const MobileFilterContent = ({
           </div>
           <div className="flex items-center space-x-2">
             <Checkbox
-              {...renderRatingCheckboxParams('4plus')}
+              {...renderRatingCheckboxParams('3plus')}
               id="mobile-rating-3plus"
             />
             <Label htmlFor="mobile-rating-3plus">3+ stars</Label>
