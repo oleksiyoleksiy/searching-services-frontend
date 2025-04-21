@@ -4,6 +4,7 @@ import RootLayout from '@/layouts/RootLayout'
 import AllCategories from '@/pages/AllCategories'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
+import CategoryPage from '@/pages/CategoryPage'
 import Home from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
 import SearchResults from '@/pages/SearchResult'
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
           { index: true, element: <Home /> },
           { path: 'search', element: <SearchResults /> },
           { path: 'categories', element: <AllCategories /> },
+          {
+            path: '/category/:categoryId',
+            element: <CategoryPage />,
+          },
           {
             path: '/auth/login',
             element: <Login />,
