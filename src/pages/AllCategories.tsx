@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CategoryCard from '@/components/CategoryCard'
 import { categories } from '@/data/mockData'
 import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 
 const AllCategories = () => {
+  const [search, setSearch] = useState<string>('')
+
+  const filteredCategories = categories.filter(c =>
+    c.title.toLowerCase().includes(search.toLocaleLowerCase())
+  )
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <main className="flex-grow">
@@ -23,6 +29,7 @@ const AllCategories = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <Input
+                  onChange={e => setSearch(e.target.value)}
                   type="text"
                   placeholder="Search categories..."
                   className="pl-10"
@@ -34,7 +41,7 @@ const AllCategories = () => {
 
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {categories.map(category => (
+            {filteredCategories.map(category => (
               <CategoryCard
                 key={category.id}
                 icon={category.icon}
