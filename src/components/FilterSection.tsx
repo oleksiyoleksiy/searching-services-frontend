@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Slider } from '@/components/ui/Slider'
-import { Checkbox } from '@/components/ui/Checkbox'
-import { Label } from '@/components/ui/Label'
+import { Slider } from '@/components/ui/slider'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@/components/ui/Select'
-import { Button } from '@/components/ui/Button'
+} from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
 import { Filter, X } from 'lucide-react'
 import {
   Sheet,
@@ -18,7 +18,7 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetFooter,
-} from '@/components/ui/Sheet'
+} from '@/components/ui/sheet'
 import { useSearchParams } from 'react-router-dom'
 
 type AvailabilityType = 'today' | 'weekend' | 'online'
@@ -117,7 +117,7 @@ const FilterSection = () => {
                 variant="outline"
                 className="w-full"
               >
-                Reset Filters
+                , Reset Filters
               </Button>
             </SheetFooter>
           </SheetContent>

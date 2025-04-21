@@ -1,6 +1,8 @@
 import AdminLayout from '@/layouts/AdminLayout'
 import MainLayout from '@/layouts/MainLayout'
 import RootLayout from '@/layouts/RootLayout'
+import Login from '@/pages/auth/Login'
+import Register from '@/pages/auth/Register'
 import Home from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
 import SearchResults from '@/pages/SearchResult'
@@ -17,6 +19,14 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Home /> },
           { path: 'search', element: <SearchResults /> },
+          {
+            path: '/auth/login',
+            element: <Login />,
+          },
+          {
+            path: '/auth/register',
+            element: <Register />,
+          },
         ],
       },
       {

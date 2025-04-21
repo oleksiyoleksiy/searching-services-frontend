@@ -4,7 +4,7 @@ import Footer from '@/components/Footer'
 import SearchBar from '@/components/SearchBar'
 import CategoryCard from '@/components/CategoryCard'
 import ServiceCard from '@/components/ServiceCard'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
 import { categories, serviceProviders } from '@/data/mockData'
 import { MapPin, Search, Star, ArrowRight, Calendar } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -16,7 +16,7 @@ const Home = () => {
 
   const handleSearch = (service: string, location: string) => {
     // setSearchParams({ service, location })
-    
+
     navigate(`/search?service=${service}&location=${location}`)
 
     // In a real application, this would trigger an API call

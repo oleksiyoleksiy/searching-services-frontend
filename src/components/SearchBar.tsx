@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Search, MapPin, X } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 interface SearchBarInitialValues {
   service: string

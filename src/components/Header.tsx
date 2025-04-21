@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, Menu, X, User } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
