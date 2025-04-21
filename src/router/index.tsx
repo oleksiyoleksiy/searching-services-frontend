@@ -1,6 +1,7 @@
 import AdminLayout from '@/layouts/AdminLayout'
 import MainLayout from '@/layouts/MainLayout'
 import RootLayout from '@/layouts/RootLayout'
+import AllCategories from '@/pages/AllCategories'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import Home from '@/pages/Home'
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Home /> },
           { path: 'search', element: <SearchResults /> },
+          { path: 'categories', element: <AllCategories /> },
           {
             path: '/auth/login',
             element: <Login />,
