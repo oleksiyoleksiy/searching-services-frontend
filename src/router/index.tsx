@@ -7,6 +7,7 @@ import Register from '@/pages/auth/Register'
 import CategoryPage from '@/pages/CategoryPage'
 import ManageBookings from '@/pages/dashboard/provider/ManageBookings'
 import MyServices from '@/pages/dashboard/provider/MyServices'
+import ProviderChat from '@/pages/dashboard/provider/ProviderChat'
 import ProviderDashboard from '@/pages/dashboard/ProviderDashboard'
 import Home from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
       {
         path: 'bookings',
         element: <ManageBookings />
+      },
+      {
+        path: 'chat',
+        element: <ProviderChat />
       }
     ]
   },
