@@ -2,6 +2,7 @@ import React from 'react'
 import { Star, MapPin, Clock, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { useNavigate } from 'react-router-dom'
 
 export interface ServiceProviderProps {
   id: string
@@ -32,6 +33,8 @@ const ServiceCard: React.FC<ServiceProviderProps> = ({
   availability,
   featured,
 }) => {
+  const navigate = useNavigate()
+
   return (
     <div
       className={`bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg ${
@@ -85,7 +88,12 @@ const ServiceCard: React.FC<ServiceProviderProps> = ({
         </div>
 
         <div className="flex space-x-2">
-          <Button variant="outline" size="sm" className="flex-1 text-sm">
+          <Button
+            onClick={() => navigate(`/provider/${id}`)}
+            variant="outline"
+            size="sm"
+            className="flex-1 text-sm"
+          >
             View Profile
           </Button>
           <Button

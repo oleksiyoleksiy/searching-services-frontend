@@ -68,6 +68,7 @@ const Home = () => {
                 Popular Categories
               </h2>
               <Button
+                onClick={() => navigate('/categories')}
                 variant="ghost"
                 className="text-localfind-600 hidden md:flex items-center"
               >

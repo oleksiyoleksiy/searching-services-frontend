@@ -7,6 +7,7 @@ import Register from '@/pages/auth/Register'
 import CategoryPage from '@/pages/CategoryPage'
 import Home from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
+import ProviderProfile from '@/pages/ProviderProfile'
 import SearchResults from '@/pages/SearchResult'
 import { createBrowserRouter } from 'react-router-dom'
 
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
           {
             path: '/category/:categoryId',
             element: <CategoryPage />,
+          },
+          {
+            path: '/provider/:id',
+            element: <ProviderProfile />,
           },
           {
             path: '/auth/login',
