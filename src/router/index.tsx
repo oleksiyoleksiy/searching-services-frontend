@@ -5,6 +5,8 @@ import AllCategories from '@/pages/AllCategories'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import CategoryPage from '@/pages/CategoryPage'
+import ManageBookings from '@/pages/dashboard/provider/ManageBookings'
+import ProviderDashboard from '@/pages/dashboard/ProviderDashboard'
 import Home from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
 import ProviderProfile from '@/pages/ProviderProfile'
@@ -50,6 +52,20 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: '/provider/dashboard',
+    element: <ProviderDashboard />,
+    children: [
+      // {
+      //   index: true,
+      //   element: 
+      // }
+      {
+        path: 'bookings',
+        element: <ManageBookings />
+      }
+    ]
   },
   {
     path: '*',

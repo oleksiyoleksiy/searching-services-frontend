@@ -27,11 +27,18 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
+
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 195 95% 42%;
 
     --radius: 0.5rem;
+
+    --sidebar-width: 16rem; 
+    --sidebar-background: 210 40% 96.1%;
+    --sidebar-foreground: 222.2 47.4% 11.2%;
   }
 
   .dark {
@@ -59,9 +66,15 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
+    --success: 142 70% 30%;
+    --success-foreground: 210 40% 98%;
+
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 195 95% 42%;
+
+    --sidebar-background: 217.2 32.6% 17.5%; /* як secondary в dark режимі */
+    --sidebar-foreground: 210 40% 98%;
   }
 }
 

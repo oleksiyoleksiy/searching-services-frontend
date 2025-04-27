@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import {
   SidebarProvider,
   Sidebar,
@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { User, Package, Calendar, MessageSquare, Star, Settings } from "lucide-react";
-
 
 const ProviderDashboard = () => {
   const navigate = useNavigate();
@@ -93,7 +92,7 @@ const ProviderDashboard = () => {
             </Button>
           </SidebarFooter>
         </Sidebar>
-        <SidebarInset className="p-4 md:p-6">
+        <SidebarInset className="p-4 md:p-6 w-full">
           <div className="flex items-center justify-between mb-6">
             <div>
               <SidebarTrigger className="md:hidden" />
@@ -101,7 +100,7 @@ const ProviderDashboard = () => {
               <p className="text-muted-foreground">Manage your services and bookings</p>
             </div>
           </div>
-          
+          <Outlet />
         </SidebarInset>
       </div>
     </SidebarProvider>
