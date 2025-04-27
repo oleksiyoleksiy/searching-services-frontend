@@ -6,6 +6,7 @@ import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import CategoryPage from '@/pages/CategoryPage'
 import ManageBookings from '@/pages/dashboard/provider/ManageBookings'
+import MyServices from '@/pages/dashboard/provider/MyServices'
 import ProviderDashboard from '@/pages/dashboard/ProviderDashboard'
 import Home from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
@@ -57,10 +58,10 @@ const router = createBrowserRouter([
     path: '/provider/dashboard',
     element: <ProviderDashboard />,
     children: [
-      // {
-      //   index: true,
-      //   element: 
-      // }
+      {
+        index: true,
+        element: <MyServices />
+      },
       {
         path: 'bookings',
         element: <ManageBookings />
