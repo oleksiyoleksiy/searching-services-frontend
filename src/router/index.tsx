@@ -7,6 +7,7 @@ import Register from '@/pages/auth/Register'
 import CategoryPage from '@/pages/CategoryPage'
 import ManageBookings from '@/pages/dashboard/provider/ManageBookings'
 import MyServices from '@/pages/dashboard/provider/MyServices'
+import ProfileSettings from '@/pages/dashboard/provider/ProfileSettings'
 import ProviderChat from '@/pages/dashboard/provider/ProviderChat'
 import ProviderReviews from '@/pages/dashboard/provider/ProviderReviews'
 import ProviderDashboard from '@/pages/dashboard/ProviderDashboard'
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
       {
         path: 'reviews',
         element: <ProviderReviews />
+      },
+      {
+        path: 'settings',
+        element: <ProfileSettings />
       }
     ]
   },
