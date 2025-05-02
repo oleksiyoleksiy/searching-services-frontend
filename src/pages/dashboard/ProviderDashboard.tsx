@@ -13,7 +13,7 @@ import {
   SidebarInset
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { User, Package, Calendar, MessageSquare, Star, Settings } from "lucide-react";
+import { User, Package, Calendar, MessageSquare, Star, Settings, Home } from "lucide-react";
 
 const ProviderDashboard = () => {
   const navigate = useNavigate();
@@ -41,8 +41,17 @@ const ProviderDashboard = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
+                  isActive={currentNavItem === "dashboard"}
+                  onClick={() => handleNavigation("/provider/dashboard", "dashboard")}
+                >
+                  <Home className="text-localfind-600" />
+                  <span>Dashboard</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
                   isActive={currentNavItem === "services"}
-                  onClick={() => handleNavigation("/provider/dashboard", "services")}
+                  onClick={() => handleNavigation("/provider/dashboard/services", "services")}
                 >
                   <Package className="text-localfind-600" />
                   <span>My Services</span>
