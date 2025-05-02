@@ -15,6 +15,7 @@ import ProviderDashboard from '@/pages/dashboard/ProviderDashboard'
 import BookingHistory from '@/pages/dashboard/user/BookingHistory'
 import FavoriteServices from '@/pages/dashboard/user/FavoriteServices'
 import UserHome from '@/pages/dashboard/user/UserHome'
+import UserSettings from '@/pages/dashboard/user/UserSettings'
 import UserDashboard from '@/pages/dashboard/UserDashboard'
 import Home from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
@@ -107,6 +108,10 @@ const router = createBrowserRouter([
       {
         path: 'favorites',
         element: <FavoriteServices />
+      },
+      {
+        path: 'settings',
+        element: <UserSettings />
       },
     ]
   },
