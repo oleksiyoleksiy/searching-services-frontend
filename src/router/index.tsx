@@ -12,6 +12,7 @@ import ProfileSettings from '@/pages/dashboard/provider/ProfileSettings'
 import ProviderChat from '@/pages/dashboard/provider/ProviderChat'
 import ProviderReviews from '@/pages/dashboard/provider/ProviderReviews'
 import ProviderDashboard from '@/pages/dashboard/ProviderDashboard'
+import BookingHistory from '@/pages/dashboard/user/BookingHistory'
 import UserHome from '@/pages/dashboard/user/UserHome'
 import UserDashboard from '@/pages/dashboard/UserDashboard'
 import Home from '@/pages/Home'
@@ -97,6 +98,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <UserHome />
+      },
+      {
+        path: 'bookings',
+        element: <BookingHistory />
       },
     ]
   },
