@@ -4,7 +4,8 @@ import {
   ChevronDown, ChevronUp, Menu, Users, ShoppingBag,
   Bell, LogOut, Settings, BarChart2,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  Home
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,7 @@ const AdminDashboard = () => {
       {/* Sidebar */}
       <aside
         className={`${sidebarOpen ? "w-64" : "w-20"
-          } bg-white shadow-lg transition-all duration-300 overflow-hidden flex flex-col`}
+          } max-md:hidden bg-white shadow-lg transition-all duration-300 overflow-hidden flex flex-col`}
       >
         <div className="h-20 flex items-center justify-between px-4 border-b">
           <div className={`flex items-center ${!sidebarOpen && "justify-center w-full"}`}>
@@ -112,7 +113,7 @@ const AdminDashboard = () => {
                   : "hover:bg-gray-100"
                   }`}
               >
-                <div className="relative">
+                <div className="relative flex justify-center">
                   <Bell className="h-5 w-5" />
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                     3
@@ -140,6 +141,18 @@ const AdminDashboard = () => {
                 {sidebarOpen && <span className="ml-3">Settings</span>}
               </Link>
             </li>
+            <li>
+              <Link
+                to="/"
+                className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/settings")
+                  ? "bg-localfind-50 text-localfind-700"
+                  : "hover:bg-gray-100"
+                  }`}
+              >
+                <Home className="h-5 w-5" />
+                {sidebarOpen && <span className="ml-3">To homepage</span>}
+              </Link>
+            </li>
           </ul>
         </nav>
 
@@ -159,9 +172,6 @@ const AdminDashboard = () => {
         <div className="p-4 sm:p-6 md:p-8">
           <div className="mb-6 flex justify-between items-center">
             <div className="flex items-center">
-              <Button variant="outline" size="icon" className="block md:hidden mr-4" onClick={toggleSidebar}>
-                <Menu className="h-5 w-5" />
-              </Button>
               <Collapsible className="md:hidden w-full">
                 <CollapsibleTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-2 font-semibold">
@@ -169,7 +179,7 @@ const AdminDashboard = () => {
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="mt-2">
+                <CollapsibleContent className="mt-2 absolute">
                   <div className="flex flex-col gap-2 p-2 bg-white rounded-md shadow-sm">
                     <Link
                       to="/admin/dashboard"
@@ -210,7 +220,7 @@ const AdminDashboard = () => {
                     >
                       <Bell className="h-5 w-5 mr-3" />
                       <span>Notifications</span>
-                      <Badge variant="destructive" className="ml-auto">3</Badge>
+                      <Badge variant="destructive" className="ml-2">3</Badge>
                     </Link>
                     <Link
                       to="/admin/dashboard/settings"
@@ -222,6 +232,23 @@ const AdminDashboard = () => {
                       <Settings className="h-5 w-5 mr-3" />
                       <span>Settings</span>
                     </Link>
+                    <Link
+                      to="/"
+                      className={`flex items-center px-3 py-2 rounded-md transition-colors ${isActive("/admin/dashboard/settings")
+                        ? "bg-localfind-50 text-localfind-700"
+                        : "hover:bg-gray-100"
+                        }`}
+                    >
+                      <Home className="h-5 w-5 mr-3" />
+                      <span>To homepage</span>
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      className={`flex items-center w-full hover:bg-gray-100 hover:text-red-600`}
+                    >
+                      <LogOut className="h-5 w-5" />
+                      <span className="ml-3">Logout</span>
+                    </Button>
                   </div>
                 </CollapsibleContent>
               </Collapsible>
@@ -248,6 +275,7 @@ const AdminDashboard = () => {
           <div>
             <Outlet />
           </div>
+
         </div>
       </main>
     </div>
