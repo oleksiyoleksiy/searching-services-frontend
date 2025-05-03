@@ -51,16 +51,11 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Section */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">Welcome back, {userData.name}</h1>
           <p className="text-muted-foreground">Here's what's happening with your services today</p>
         </div>
-        <Button variant="outline" className="gap-2 whitespace-nowrap">
-          <LogOut className="h-4 w-4" />
-          <span>Log Out</span>
-        </Button>
       </div>
 
       {/* Stats Cards */}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
+import { Routes, Route, useNavigate, Outlet, Link } from "react-router-dom";
 import {
   SidebarProvider,
   Sidebar,
@@ -13,7 +13,7 @@ import {
   SidebarInset
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { User, Package, Calendar, MessageSquare, Star, Settings, Home } from "lucide-react";
+import { User, Package, Calendar, MessageSquare, Star, Settings, Home, LogOut } from "lucide-react";
 
 const ProviderDashboard = () => {
   const navigate = useNavigate();
@@ -29,6 +29,13 @@ const ProviderDashboard = () => {
       <div className="flex min-h-screen w-full bg-gray-50">
         <Sidebar>
           <SidebarHeader className="border-b border-sidebar-border">
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center">
+                <span className="text-2xl font-bold bg-gradient-to-r from-localfind-600 to-localfind-500 bg-clip-text text-transparent">
+                  LocalFind
+                </span>
+              </Link>
+            </div>
             <div className="flex items-center gap-2 px-2">
               <User className="h-7 w-7 rounded-full bg-localfind-100 p-1 text-localfind-600" />
               <div className="flex flex-col">
@@ -96,8 +103,9 @@ const ProviderDashboard = () => {
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter className="border-t border-sidebar-border p-4">
-            <Button variant="outline" className="w-full" onClick={() => navigate("/")}>
-              Back to Home
+            <Button variant="outline" className="w-full flex items-center gap-2" onClick={() => navigate("/")}>
+              <LogOut className="h-4 w-4" />
+              <span>Sign Out</span>
             </Button>
           </SidebarFooter>
         </Sidebar>
