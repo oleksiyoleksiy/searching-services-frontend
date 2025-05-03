@@ -144,10 +144,7 @@ const AdminDashboard = () => {
             <li>
               <Link
                 to="/"
-                className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/settings")
-                  ? "bg-localfind-50 text-localfind-700"
-                  : "hover:bg-gray-100"
-                  }`}
+                className={`flex items-center px-4 py-3 rounded-md transition-colors hover:bg-gray-100`}
               >
                 <Home className="h-5 w-5" />
                 {sidebarOpen && <span className="ml-3">To homepage</span>}
@@ -234,10 +231,7 @@ const AdminDashboard = () => {
                     </Link>
                     <Link
                       to="/"
-                      className={`flex items-center px-3 py-2 rounded-md transition-colors ${isActive("/admin/dashboard/settings")
-                        ? "bg-localfind-50 text-localfind-700"
-                        : "hover:bg-gray-100"
-                        }`}
+                      className={`flex items-center px-3 py-2 rounded-md transition-colors hover:bg-gray-100`}
                     >
                       <Home className="h-5 w-5 mr-3" />
                       <span>To homepage</span>
