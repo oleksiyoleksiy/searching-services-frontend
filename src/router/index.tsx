@@ -5,6 +5,7 @@ import AllCategories from '@/pages/AllCategories'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import CategoryPage from '@/pages/CategoryPage'
+import AdminHome from '@/pages/dashboard/admin/AdminHome'
 import AdminDashboard from '@/pages/dashboard/AdminDashboard'
 import Dashboard from '@/pages/dashboard/provider/Dashboard'
 import ManageBookings from '@/pages/dashboard/provider/ManageBookings'
@@ -120,10 +121,10 @@ const router = createBrowserRouter([
     path: '/admin/dashboard',
     element: <AdminDashboard />,
     children: [
-      // {
-      //   index: true,
-      //   element: <UserHome />
-      // },
+      {
+        index: true,
+        element: <AdminHome />
+      },
 
     ]
   },
