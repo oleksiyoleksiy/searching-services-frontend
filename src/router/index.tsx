@@ -6,6 +6,7 @@ import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import CategoryPage from '@/pages/CategoryPage'
 import AdminHome from '@/pages/dashboard/admin/AdminHome'
+import UserManagement from '@/pages/dashboard/admin/UserManagement'
 import AdminDashboard from '@/pages/dashboard/AdminDashboard'
 import Dashboard from '@/pages/dashboard/provider/Dashboard'
 import ManageBookings from '@/pages/dashboard/provider/ManageBookings'
@@ -125,7 +126,10 @@ const router = createBrowserRouter([
         index: true,
         element: <AdminHome />
       },
-
+      {
+        path: 'users',
+        element: <UserManagement />
+      },
     ]
   },
   {
