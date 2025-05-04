@@ -1,6 +1,7 @@
 import AdminLayout from '@/layouts/AdminLayout'
 import MainLayout from '@/layouts/MainLayout'
 import RootLayout from '@/layouts/RootLayout'
+import AboutPage from '@/pages/AboutPage'
 import AllCategories from '@/pages/AllCategories'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
           { index: true, element: <Home /> },
+          {
+            path: 'about',
+            element: <AboutPage />,
+          },
           { path: 'search', element: <SearchResults /> },
           { path: 'categories', element: <AllCategories /> },
           {
@@ -57,14 +62,6 @@ const router = createBrowserRouter([
             path: '/auth/register',
             element: <Register />,
           },
-        ],
-      },
-      {
-        path: '/admin',
-        element: <AdminLayout />,
-        children: [
-          // { path: 'dashboard', element: <Dashboard /> },
-          // { path: 'users', element: <Users /> },
         ],
       },
     ],

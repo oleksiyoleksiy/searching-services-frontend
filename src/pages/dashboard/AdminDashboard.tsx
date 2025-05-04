@@ -176,7 +176,7 @@ const AdminDashboard = () => {
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="mt-2 absolute">
+                <CollapsibleContent className="mt-2 absolute z-10">
                   <div className="flex flex-col gap-2 p-2 bg-white rounded-md shadow-sm">
                     <Link
                       to="/admin/dashboard"
