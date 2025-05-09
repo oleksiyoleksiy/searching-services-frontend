@@ -72,6 +72,8 @@ export default function Login() {
     </div>
   }
 
+  if (isLoading) return null
+
   if (!isLoading && user) return <NotFound />
 
   return (

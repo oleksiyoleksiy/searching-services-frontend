@@ -14,6 +14,8 @@ export default function FetchUser() {
     if (response) {
       dispatch(authActions.setUser(response))
     }
+
+    dispatch(authActions.setLoading(false))
   }
 
   useEffect(() => {

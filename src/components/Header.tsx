@@ -2,9 +2,15 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, Menu, X, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store'
+import { hasPermission } from '@/utils/permissions'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { user, isLoading } = useSelector((s: RootState) => s.auth)
+
+  if (isLoading) return null
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-sm border-b">
@@ -49,19 +55,19 @@ const Header = () => {
           <Button variant="ghost" size="icon">
             <Search className="h-5 w-5" />
           </Button>
-          <Link to="/auth/login">
+          {user && <Link to={hasPermission('admin', user) ? '/admin/dashboard' : hasPermission('provider', user) ? '/provider/dashboard' : '/user/dashboard'}>
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button>
-          </Link>
-          <Link to="/auth/login">
+          </Link>}
+          {!user && <Link to="/auth/login">
             <Button
               variant="default"
               className="bg-localfind-600 hover:bg-localfind-700"
             >
               Log in
             </Button>
-          </Link>
+          </Link>}
         </div>
 
         {/* Mobile Menu Button */}

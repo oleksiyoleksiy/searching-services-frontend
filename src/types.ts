@@ -14,6 +14,7 @@ export interface User {
   name: string
   email: string
   roles: Role[]
+  avatar: string
   created_at: string
 }
 
