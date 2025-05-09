@@ -1,8 +1,19 @@
+interface Permission {
+  id: number
+  name: string
+}
+
+interface Role {
+  id: number
+  name: string
+  permissions: Permission[]
+}
+
 export interface User {
   id: number
   name: string
   email: string
-  is_admin: boolean
+  roles: Role[]
   created_at: string
 }
 

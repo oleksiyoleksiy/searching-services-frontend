@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, Link, useLocation, Outlet } from "react-router-dom";
+import { Routes, Route, Link, useLocation, Outlet, Navigate } from "react-router-dom";
 import {
   ChevronDown, ChevronUp, Menu, Users, ShoppingBag,
   Bell, LogOut, Settings, BarChart2,
@@ -21,9 +21,13 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { hasPermission } from "@/utils/permissions";
 
 const AdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isLoading, user } = useSelector((s: RootState) => s.auth)
   const location = useLocation();
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
@@ -31,6 +35,8 @@ const AdminDashboard = () => {
   const isActive = (path: string) => {
     return location.pathname.includes(path);
   };
+
+  if (!isLoading && user && !hasPermission('admin', user)) return <Navigate to='auth/login'/> 
 
   return (
     <div className="flex h-screen bg-gray-50">

@@ -12,8 +12,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import authService from '@/services/authService'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { authActions } from '@/store/authSlice'
+import { RootState } from '@/store'
+import NotFound from '@/pages/NotFound'
 
 interface Errors {
   email?: string[]
@@ -26,23 +28,32 @@ export default function Login() {
     password: '',
   })
   const [errors, setErrors] = useState<Errors>({})
+  const { isLoading, user } = useSelector((s: RootState) => s.auth)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (formData.password.length < 8) {
+      setErrors({
+        password: [
+          'The password field must be at least 8 characters.'
+        ]
+      })
+      return
+    }
+
     try {
       const response = await authService.login(formData)
 
       if (response) {
         dispatch(authActions.setToken(response))
-        // navigate()
+        navigate('/')
       }
-    } catch(e:any) {
-
+    } catch (e: any) {
+      setErrors(e.response?.data?.errors)
     }
-    
   }
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +61,18 @@ export default function Login() {
 
     setFormData(prev => ({ ...prev, [name]: value }))
   }
+
+  const renderErrors = (errors?: string[]) => {
+    return errors && <div className="flex flex-col gap-1">
+      {errors.map(error => (
+        <div key={error} className="text-red-500 text-sm">
+          {error}
+        </div>
+      ))}
+    </div>
+  }
+
+  if (!isLoading && user) return <NotFound />
 
   return (
     <div className="container mx-auto flex min-h-[calc(100vh-4rem)] items-center justify-center">
@@ -108,6 +131,7 @@ export default function Login() {
                 onChange={handleInputChange}
                 required
               />
+              {renderErrors(errors.email)}
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="password">Password</Label>
@@ -119,6 +143,7 @@ export default function Login() {
                 onChange={handleInputChange}
                 required
               />
+              {renderErrors(errors.password)}
             </div>
             <Button type="submit" className="w-full">
               Sign in
