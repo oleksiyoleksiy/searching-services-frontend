@@ -79,6 +79,18 @@ export default function Register() {
               </RadioGroup>
             </div>
             <div className="flex flex-col gap-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                name='name'
+                placeholder="Ім'я"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"

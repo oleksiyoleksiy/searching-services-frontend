@@ -64,89 +64,89 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: '/provider/dashboard',
+        element: <ProviderDashboard />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />
+          },
+          {
+            path: 'services',
+            element: <MyServices />
+          },
+          {
+            path: 'bookings',
+            element: <ManageBookings />
+          },
+          {
+            path: 'chat',
+            element: <ProviderChat />
+          },
+          {
+            path: 'reviews',
+            element: <ProviderReviews />
+          },
+          {
+            path: 'settings',
+            element: <ProfileSettings />
+          }
+        ]
+      },
+      {
+        path: '/user/dashboard',
+        element: <UserDashboard />,
+        children: [
+          {
+            index: true,
+            element: <UserHome />
+          },
+          {
+            path: 'bookings',
+            element: <BookingHistory />
+          },
+          {
+            path: 'favorites',
+            element: <FavoriteServices />
+          },
+          {
+            path: 'settings',
+            element: <UserSettings />
+          },
+        ]
+      },
+      {
+        path: '/admin/dashboard',
+        element: <AdminDashboard />,
+        children: [
+          {
+            index: true,
+            element: <AdminHome />
+          },
+          {
+            path: 'users',
+            element: <UserManagement />
+          },
+          {
+            path: 'services',
+            element: <ServiceManagement />
+          },
+          {
+            path: 'notifications',
+            element: <Notifications />
+          },
+          {
+            path: 'settings',
+            element: <AdminSettings />
+          },
+        ]
+      },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
     ],
-  },
-  {
-    path: '/provider/dashboard',
-    element: <ProviderDashboard />,
-    children: [
-      {
-        index: true,
-        element: <Dashboard />
-      },
-      {
-        path: 'services',
-        element: <MyServices />
-      },
-      {
-        path: 'bookings',
-        element: <ManageBookings />
-      },
-      {
-        path: 'chat',
-        element: <ProviderChat />
-      },
-      {
-        path: 'reviews',
-        element: <ProviderReviews />
-      },
-      {
-        path: 'settings',
-        element: <ProfileSettings />
-      }
-    ]
-  },
-  {
-    path: '/user/dashboard',
-    element: <UserDashboard />,
-    children: [
-      {
-        index: true,
-        element: <UserHome />
-      },
-      {
-        path: 'bookings',
-        element: <BookingHistory />
-      },
-      {
-        path: 'favorites',
-        element: <FavoriteServices />
-      },
-      {
-        path: 'settings',
-        element: <UserSettings />
-      },
-    ]
-  },
-  {
-    path: '/admin/dashboard',
-    element: <AdminDashboard />,
-    children: [
-      {
-        index: true,
-        element: <AdminHome />
-      },
-      {
-        path: 'users',
-        element: <UserManagement />
-      },
-      {
-        path: 'services',
-        element: <ServiceManagement />
-      },
-      {
-        path: 'notifications',
-        element: <Notifications />
-      },
-      {
-        path: 'settings',
-        element: <AdminSettings />
-      },
-    ]
-  },
-  {
-    path: '*',
-    element: <NotFound />,
   },
 ])
 

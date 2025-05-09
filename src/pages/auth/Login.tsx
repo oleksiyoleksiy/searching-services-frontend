@@ -11,20 +11,37 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Facebook, Github, Mail } from 'lucide-react'
-import { toast } from 'sonner'
+import authService from '@/services/authService'
+import { useDispatch } from 'react-redux'
+import { authActions } from '@/store/authSlice'
+
+interface Errors {
+  email?: string[]
+  password?: string[]
+}
 
 export default function Login() {
-  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   })
+  const [errors, setErrors] = useState<Errors>({})
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    console.log(formData);
+    try {
+      const response = await authService.login(formData)
+
+      if (response) {
+        dispatch(authActions.setToken(response))
+        // navigate()
+      }
+    } catch(e:any) {
+
+    }
     
   }
 
