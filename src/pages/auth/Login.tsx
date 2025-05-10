@@ -133,7 +133,7 @@ export default function Login() {
                 onChange={handleInputChange}
                 required
               />
-              {renderErrors(errors.email)}
+              {renderErrors(errors?.email)}
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="password">Password</Label>
@@ -145,7 +145,7 @@ export default function Login() {
                 onChange={handleInputChange}
                 required
               />
-              {renderErrors(errors.password)}
+              {renderErrors(errors?.password)}
             </div>
             <Button type="submit" className="w-full">
               Sign in

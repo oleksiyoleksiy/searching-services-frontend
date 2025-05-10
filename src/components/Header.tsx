@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, Menu, X, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,10 @@ import { hasPermission } from '@/utils/permissions'
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user, isLoading } = useSelector((s: RootState) => s.auth)
+
+  useEffect(() => {
+    console.log(user)
+  }, [user])
 
   if (isLoading) return null
 

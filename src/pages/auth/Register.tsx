@@ -117,7 +117,7 @@ export default function Register() {
               <Label>I want to</Label>
               <RadioGroup
                 defaultValue={formData.user_type}
-                name='userType'
+                name='user_type'
                 onChange={handleInputChange}
                 className="flex flex-col space-y-1"
               >
@@ -144,7 +144,7 @@ export default function Register() {
                 onChange={handleInputChange}
                 required
               />
-              {renderErrors(errors.name)}
+              {renderErrors(errors?.name)}
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="email">Email</Label>
@@ -157,7 +157,7 @@ export default function Register() {
                 onChange={handleInputChange}
                 required
               />
-              {renderErrors(errors.email)}
+              {renderErrors(errors?.email)}
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="password">Password</Label>
@@ -169,19 +169,19 @@ export default function Register() {
                 onChange={handleInputChange}
                 required
               />
-              {renderErrors(errors.password)}
+              {renderErrors(errors?.password)}
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                name='confirmPassword'
+                name='password_confirmation'
                 value={formData.password_confirmation}
                 onChange={handleInputChange}
                 required
               />
-              {renderErrors(errors.password_confirmation)}
+              {renderErrors(errors?.password_confirmation)}
             </div>
             <Button type="submit" className="w-full">
               Create account

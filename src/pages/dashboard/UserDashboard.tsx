@@ -14,15 +14,28 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { User, Clock, Star, Settings, Home, LogOut, BookOpen, Heart } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { authActions } from "@/store/authSlice";
+import authService from "@/services/authService";
 
 const UserDashboard = () => {
-  const navigate = useNavigate();
   const [currentNavItem, setCurrentNavItem] = useState("home");
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const handleNavigation = (route: string, navItem: string) => {
     navigate(route);
     setCurrentNavItem(navItem);
   };
+
+  const handleLogoutButtonClick = async () => {
+    const response = await authService.logout()
+
+    if (response) {
+      dispatch(authActions.logout())
+      navigate('/auth/login')
+    }
+  }
 
   return (
     <SidebarProvider>
@@ -87,7 +100,7 @@ const UserDashboard = () => {
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter className="border-t border-sidebar-border p-4">
-            <Button variant="outline" className="w-full flex items-center gap-2" onClick={() => navigate("/")}>
+            <Button variant="outline" className="w-full flex items-center gap-2" onClick={handleLogoutButtonClick}>
               <LogOut className="h-4 w-4" />
               <span>Sign Out</span>
             </Button>

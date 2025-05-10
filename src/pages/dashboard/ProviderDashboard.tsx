@@ -14,15 +14,30 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { User, Package, Calendar, MessageSquare, Star, Settings, Home, LogOut } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import authService from "@/services/authService";
+import { authActions } from "@/store/authSlice";
 
 const ProviderDashboard = () => {
-  const navigate = useNavigate();
   const [currentNavItem, setCurrentNavItem] = useState("services");
+  const { user } = useSelector((s: RootState) => s.auth)
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const handleNavigation = (route: string, navItem: string) => {
     navigate(route);
     setCurrentNavItem(navItem);
   };
+
+  const handleLogoutButtonClick = async () => {
+    const response = await authService.logout()
+
+    if (response) {
+      dispatch(authActions.logout())
+      navigate('/auth/login')
+    }
+  }
 
   return (
     <SidebarProvider>
@@ -39,8 +54,8 @@ const ProviderDashboard = () => {
             <div className="flex items-center gap-2 px-2">
               <User className="h-7 w-7 rounded-full bg-localfind-100 p-1 text-localfind-600" />
               <div className="flex flex-col">
-                <span className="text-sm font-medium">Provider Name</span>
-                <span className="text-xs text-muted-foreground">provider@example.com</span>
+                <span className="text-sm font-medium">{user?.name}</span>
+                <span className="text-xs text-muted-foreground">{user?.email}</span>
               </div>
             </div>
           </SidebarHeader>
@@ -103,7 +118,7 @@ const ProviderDashboard = () => {
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter className="border-t border-sidebar-border p-4">
-            <Button variant="outline" className="w-full flex items-center gap-2" onClick={() => navigate("/")}>
+            <Button variant="outline" className="w-full flex items-center gap-2" onClick={handleLogoutButtonClick}>
               <LogOut className="h-4 w-4" />
               <span>Sign Out</span>
             </Button>
