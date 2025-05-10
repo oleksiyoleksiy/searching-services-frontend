@@ -9,20 +9,22 @@ export default function FetchUser() {
   const dispatch = useDispatch()
 
   const fetchUser = async () => {
-    const response = await userService.current()
+    if (accessToken) {
+      const response = await userService.current()
 
-    if (response) {
-      dispatch(authActions.setUser(response))
+      if (response) {
+        dispatch(authActions.setUser(response))
+      }
     }
-
-    dispatch(authActions.setLoading(false))
   }
 
   useEffect(() => {
-    if (accessToken) {
-      fetchUser()
-    }
+    fetchUser().then(() => dispatch(authActions.setLoading(false)))
   }, [accessToken])
+
+
+
+
 
   return null
 }

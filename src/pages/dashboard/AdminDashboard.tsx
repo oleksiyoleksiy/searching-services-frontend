@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, Link, useLocation, Outlet, Navigate } from "react-router-dom";
+import { Routes, Route, Link, useLocation, Outlet, Navigate, useNavigate } from "react-router-dom";
 import {
   ChevronDown, ChevronUp, Menu, Users, ShoppingBag,
   Bell, LogOut, Settings, BarChart2,
@@ -21,22 +21,36 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import { resetAction, RootState } from "@/store";
 import { hasPermission } from "@/utils/permissions";
+import authService from "@/services/authService";
+import { authActions } from "@/store/authSlice";
+import NotFound from "../NotFound";
 
 const AdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { isLoading, user } = useSelector((s: RootState) => s.auth)
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const isActive = (path: string) => {
     return location.pathname.includes(path);
-  };
+  }
 
-  if (!isLoading && user && !hasPermission('admin', user)) return <Navigate to='auth/login'/> 
+  const handleLogoutButtonClick = async () => {
+    const response = await authService.logout()
+
+    if (response) {
+      dispatch(authActions.logout())
+      navigate('/auth/login')
+    }
+  }
+
+  if (!isLoading && user && !hasPermission('admin', user)) return <NotFound />
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -163,6 +177,7 @@ const AdminDashboard = () => {
           <Button
             variant="ghost"
             className={`flex items-center w-full ${!sidebarOpen && "justify-center"} hover:bg-gray-100 hover:text-red-600`}
+            onClick={handleLogoutButtonClick}
           >
             <LogOut className="h-5 w-5" />
             {sidebarOpen && <span className="ml-3">Logout</span>}
@@ -245,6 +260,7 @@ const AdminDashboard = () => {
                     <Button
                       variant="ghost"
                       className={`flex items-center w-full hover:bg-gray-100 hover:text-red-600`}
+                      onClick={handleLogoutButtonClick}
                     >
                       <LogOut className="h-5 w-5" />
                       <span className="ml-3">Logout</span>

@@ -71,7 +71,7 @@
 
           store.dispatch(resetAction())
 
-          navigate('/admin/login')
+          navigate('/auth/login')
 
           return Promise.reject(refreshError)
         }
