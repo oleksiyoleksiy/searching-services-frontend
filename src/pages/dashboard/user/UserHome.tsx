@@ -71,7 +71,7 @@ const UserHome = () => {
             <p className="text-gray-600 mt-1">Here's an overview of your services and bookings.</p>
           </div>
           <Avatar className="h-14 w-14">
-            <AvatarImage src={user?.avatar} alt={user?.name} />
+            <AvatarImage className="object-cover object-center" src={user?.avatar} alt={user?.name} />
             {/* <AvatarFallback>{user?.avatar}</AvatarFallback> */}
           </Avatar>
         </div>

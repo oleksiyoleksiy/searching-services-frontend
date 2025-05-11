@@ -9,8 +9,15 @@ interface Role {
   permissions: Permission[]
 }
 
+interface Company {
+  id: number
+  name: string
+  years_of_experience: string
+  categories: Category[]
+}
+
 export interface Category {
-  id: number 
+  id: number
   name: string
 }
 
@@ -25,6 +32,7 @@ export interface User {
   is_have_avatar: boolean
   phone_number: string
   created_at: string
+  company: Company | null
 }
 
 export interface ApplicationData {

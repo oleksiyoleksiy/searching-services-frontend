@@ -34,19 +34,6 @@ interface ProfileData {
   avatar_remove: 1 | 0
 }
 
-// const user = {
-//   name: "Jane Smith",
-//   email: "user@example.com",
-//   phone: "+1 (555) 123-4567",
-//   avatar: "/placeholder.svg",
-//   language: "en",
-//   notifications: {
-//     email: true,
-//     push: true,
-//     sms: false
-//   }
-// };
-
 const UserSettings = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);

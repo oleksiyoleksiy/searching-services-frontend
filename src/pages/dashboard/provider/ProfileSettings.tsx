@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,23 +8,149 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar } from '@/components/ui/avatar';
 // import { Switch } from '@/components/ui/switch';
 import { CheckIcon } from 'lucide-react';
+import { authActions } from '@/store/authSlice';
+import userService from '@/services/userService';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import ImageUpload from '@/components/ImageUpload';
+import { Category } from '@/types';
+import categoryService from '@/services/categoryService';
+import { MultiSelect } from '@/components/ui/multi-select';
+import providerService from '@/services/providerService';
+
+interface Errors {
+  name?: string[]
+  email?: string[]
+  phone_number?: string[]
+  address?: string[]
+  bio?: string[]
+  avatar?: string[]
+  company_name?: string[]
+  categories?: string[]
+  years_of_experience?: string[]
+}
+
+interface ProfileData {
+  name: string
+  email: string
+  phone_number: string
+  address: string
+  bio: string
+  avatar: File | null
+  avatar_remove: 1 | 0
+  company_name: string
+  categories: string[]
+  years_of_experience: string
+}
 
 const ProfileSettings = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState<Errors>({});
+  const { user } = useSelector((s: RootState) => s.auth)
+  const [avatar, setAvatar] = useState<string | undefined>()
+  const [profileData, setProfileData] = useState<ProfileData>({
+    name: '',
+    email: '',
+    phone_number: '',
+    address: '',
+    bio: '',
+    avatar: null,
+    avatar_remove: 0,
+    company_name: '',
+    categories: [],
+    years_of_experience: ''
+  })
+  const [categories, setCategories] = useState<Category[]>([])
+  const dispatch = useDispatch()
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (user) {
 
-    setIsSubmitting(true);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
+      setProfileData({
+        name: user.name,
+        email: user.email,
+        phone_number: user.phone_number,
+        address: user.address,
+        bio: user.bio || '',
+        avatar: null,
+        avatar_remove: 0,
+        company_name: user.company?.name || '',
+        years_of_experience: user.company?.years_of_experience || '',
+        categories: user.company?.categories.map(c => String(c.id)) || []
+      })
 
-      setTimeout(() => setIsSuccess(false), 3000);
-    }, 1000);
+      if (user.is_have_avatar) {
+        setAvatar(user.avatar)
+      }
+    }
+  }, [user])
+
+  const fetchCategories = async () => {
+    const response = await categoryService.index()
+
+    if (response) {
+      setCategories(response)
+    }
+  }
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setProfileData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
+
+  const handleLanguageChange = (value: string) => {
+    setProfileData(prev => ({
+      ...prev,
+      language: value
+    }));
+  };
+
+  const handleImageChange = (file: File | null, imageURL: string | null) => {
+    setProfileData(prev => ({ ...prev, avatar: file, avatar_remove: file ? 0 : 1 }))
+
+    if (imageURL) setAvatar(imageURL)
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+
+    try {
+      setIsSubmitting(true)
+
+      const response = await providerService.update(profileData).finally(() => setIsSubmitting(false))
+
+      if (response) {
+        dispatch(authActions.setUser(response))
+        setIsSuccess(true)
+      }
+
+    } catch (e: any) {
+      console.log(e);
+      
+      setErrors(e.response?.data?.errors)
+    }
+
+  }
+
+  const renderErrors = (errors?: string[]) => {
+    return errors && <div className="flex flex-col gap-1">
+      {errors.map(error => (
+        <div key={error} className="text-red-500 text-sm">
+          {error}
+        </div>
+      ))}
+    </div>
+  }
 
   return (
     <div className="space-y-6">
@@ -50,51 +176,109 @@ const ProfileSettings = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-20 w-20">
-                    <img src="https://i.pravatar.cc/150?img=1" alt="Profile" />
-                  </Avatar>
-                  <div>
-                    <Button variant="outline" type="button" size="sm">
-                      Change Avatar
-                    </Button>
+                <div className="flex flex-col gap-2">
+
+                  <div className="flex flex-col items-center sm:flex-row sm:items-start gap-6">
+                    <ImageUpload
+                      defaultImage={avatar}
+                      onImageChange={handleImageChange}
+                      size="md"
+                      title="Profile Picture"
+                      description="Upload a new profile photo"
+                    />
+
+                    <div className="space-y-4 w-full">
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="fullName">Full Name</Label>
+                        <Input value={profileData.name} onChange={handleInputChange} name="name" id="fullName" placeholder="John Smith" />
+                        {renderErrors(errors?.name)}
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="email">Email Address</Label>
+                        <Input value={profileData.email} onChange={handleInputChange} name="email" id="email" type="email" placeholder="user@example.com" />
+                        {renderErrors(errors?.email)}
+                      </div>
+                    </div>
                   </div>
+                  {renderErrors(errors?.avatar)}
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" defaultValue="John" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" defaultValue="Provider" />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input id="email" type="email" defaultValue="john.provider@example.com" />
-                </div>
-
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" type="tel" defaultValue="+1 (555) 123-4567" />
+                  <Input value={profileData.phone_number} onChange={handleInputChange} name="phone_number" id="phone" type="tel" placeholder="+1 (xxx) xxx-xxxx" />
+                  {renderErrors(errors?.phone_number)}
                 </div>
 
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="address">Address</Label>
-                  <Input id="address" defaultValue="123 Provider St, Service City" />
+                  <Input id="address" value={profileData.address} onChange={handleInputChange} name="address" placeholder="123 user St, Service City" />
+                  {renderErrors(errors?.address)}
                 </div>
 
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="bio">Bio</Label>
                   <Textarea
                     id="bio"
+                    name="bio"
                     rows={4}
-                    defaultValue="Professional service provider with over 10 years of experience in home cleaning and maintenance."
+                    placeholder="Write something about yourself."
+                    value={profileData.bio} onChange={handleInputChange}
                   />
+                  {renderErrors(errors?.bio)}
                 </div>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Company Information</CardTitle>
+                    <CardDescription>
+                      Update your company details
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-6">
+
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="companyName">Company/Business Name</Label>
+                        <Input
+                          id="companyName"
+                          type="text"
+                          name='company_name'
+                          placeholder="Your Business LLC"
+                          value={profileData.company_name}
+                          onChange={handleInputChange}
+                          required
+                        />
+                        {renderErrors(errors?.company_name)}
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="serviceCategories">Service Categories</Label>
+                        <MultiSelect
+                          options={categories.map(c => ({ label: c.name, value: String(c.id) }))}
+                          selected={profileData.categories}
+                          onChange={(selected) => setProfileData({ ...profileData, categories: selected })}
+                          placeholder="Search and select categories..."
+
+                        />
+                        {renderErrors(errors?.categories)}
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="yearsOfExperience">Years of Experience</Label>
+                        <Input
+                          id="yearsOfExperience"
+                          type="number"
+                          name='years_of_experience'
+                          min="0"
+                          placeholder="e.g. 5"
+                          required
+                          value={profileData.years_of_experience}
+                          onChange={handleInputChange}
+                        />
+                        {renderErrors(errors?.years_of_experience)}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
                 <div className="flex gap-2">
                   <Button type="submit" disabled={isSubmitting} className="bg-localfind-600 hover:bg-localfind-700">
@@ -140,7 +324,7 @@ const ProfileSettings = () => {
             </CardContent>
           </Card>
         </TabsContent>
-{/* 
+        {/* 
         <TabsContent value="notifications" className="space-y-6 pt-6">
           <Card>
             <CardHeader>
