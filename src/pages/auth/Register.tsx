@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,27 +18,62 @@ import { RootState } from '@/store'
 import authService from '@/services/authService'
 import { authActions } from '@/store/authSlice'
 import NotFound from '../NotFound'
+import { MultiSelect } from '@/components/ui/multi-select'
+import { Category } from '@/types'
+import categoryService from '@/services/categoryService'
 
 interface Errors {
   name?: string[]
   email?: string[]
+  address?: string[]
   password?: string[]
   password_confirmation?: string[]
   user_type?: string[]
+  years_of_experience?: string[]
+  company_name?: string[]
+  phone_number?: string[]
+  categories?: string[]
+}
+
+interface FormData {
+  name: string
+  email: string
+  address: string
+  password: string
+  password_confirmation: string
+  company_name: string
+  years_of_experience: string
+  phone_number: string
+  user_type: 'client' | 'provider'
+  categories: string[]
 }
 
 export default function Register() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
+    address: '',
     password: '',
     password_confirmation: '',
+    years_of_experience: '',
+    company_name: '',
     user_type: 'client',
+    categories: [],
+    phone_number: ''
   })
+  const [categories, setCategories] = useState<Category[]>([])
   const [errors, setErrors] = useState<Errors>({})
   const { isLoading, user } = useSelector((s: RootState) => s.auth)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const fetchCategories = async () => {
+    const response = await categoryService.index()
+
+    if (response) {
+      setCategories(response)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -61,7 +96,7 @@ export default function Register() {
       return
     }
 
-    try {
+    try {  
       const response = await authService.register(formData)
 
       if (response) {
@@ -69,20 +104,21 @@ export default function Register() {
         navigate('/')
       }
     } catch (e: any) {
+      console.log(e);
       setErrors(e.response?.data?.errors)
     }
   }
 
-    
-    // toast.success(
-    //   'Registration successful! Please check your email to verify your account.'
-    // )
-    // navigate('/auth/login')
-  
+
+  // toast.success(
+  //   'Registration successful! Please check your email to verify your account.'
+  // )
+  // navigate('/auth/login')
+
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    
+
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
@@ -95,6 +131,10 @@ export default function Register() {
       ))}
     </div>
   }
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
   if (isLoading) return null
 
@@ -160,6 +200,32 @@ export default function Register() {
               {renderErrors(errors?.email)}
             </div>
             <div className="flex flex-col gap-2">
+              <Label htmlFor="address">Address</Label>
+              <Input
+                id="address"
+                type="address"
+                name='address'
+                placeholder="123 user Str, New York City"
+                value={formData.address}
+                onChange={handleInputChange}
+                required
+              />
+              {renderErrors(errors?.address)}
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="phone_number">Phone number</Label>
+              <Input
+                id="phone_number"
+                type="tel"
+                name="phone_number"
+                placeholder="+(123) 456-7890"
+                value={formData.phone_number}
+                onChange={handleInputChange}
+                required
+              />
+              {renderErrors(errors?.phone_number)}
+            </div>
+            <div className="flex flex-col gap-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
@@ -183,6 +249,47 @@ export default function Register() {
               />
               {renderErrors(errors?.password_confirmation)}
             </div>
+            {formData.user_type === 'provider' && (
+              <div className="space-y-4 border rounded-md p-4 bg-gray-50">
+                <h3 className="font-medium text-gray-700">Service Provider Information</h3>
+
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="companyName">Company/Business Name</Label>
+                  <Input
+                    id="companyName"
+                    type="text"
+                    placeholder="Your Business LLC"
+                    value={formData.company_name}
+                    onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                    required={formData.user_type === 'provider'}
+                  />
+                  {renderErrors(errors?.company_name)}
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="serviceCategories">Service Categories</Label>
+                  <MultiSelect
+                    options={categories.map(c => ({ label: c.name, value: String(c.id) }))}
+                    selected={formData.categories}
+                    onChange={(selected) => setFormData({ ...formData, categories: selected })}
+                    placeholder="Search and select categories..."
+                  />
+                  {renderErrors(errors?.categories)}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="yearsOfExperience">Years of Experience</Label>
+                  <Input
+                    id="yearsOfExperience"
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 5"
+                    value={formData.years_of_experience}
+                    onChange={(e) => setFormData({ ...formData, years_of_experience: e.target.value })}
+                  />
+                  {renderErrors(errors?.years_of_experience)}
+                </div>
+              </div>
+            )}
             <Button type="submit" className="w-full">
               Create account
             </Button>

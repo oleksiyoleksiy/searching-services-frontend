@@ -10,10 +10,6 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user, isLoading } = useSelector((s: RootState) => s.auth)
 
-  useEffect(() => {
-    console.log(user)
-  }, [user])
-
   if (isLoading) return null
 
   return (

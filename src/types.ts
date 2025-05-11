@@ -9,12 +9,21 @@ interface Role {
   permissions: Permission[]
 }
 
+export interface Category {
+  id: number 
+  name: string
+}
+
 export interface User {
   id: number
   name: string
   email: string
+  address: string
+  bio: string | null
   roles: Role[]
   avatar: string
+  is_have_avatar: boolean
+  phone_number: string
   created_at: string
 }
 

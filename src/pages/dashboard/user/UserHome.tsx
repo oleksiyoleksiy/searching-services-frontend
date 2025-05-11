@@ -3,14 +3,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Calendar, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 // Mock user data
-const user = {
-  name: "Jane Smith",
-  email: "user@example.com",
-  registrationDate: "May 15, 2024",
-  avatar: "/placeholder.svg"
-};
+
 
 // Mock upcoming bookings data
 const upcomingBookings = [
@@ -62,6 +59,7 @@ const suggestedServices = [
 
 const UserHome = () => {
   const navigate = useNavigate();
+  const { user } = useSelector((s: RootState) => s.auth)
 
   return (
     <div className="space-y-8">
@@ -69,12 +67,12 @@ const UserHome = () => {
       <section className="bg-white p-6 rounded-lg shadow-sm">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-gray-800">Welcome back, {user.name}!</h2>
+            <h2 className="text-3xl font-bold text-gray-800">Welcome back, {user?.name}!</h2>
             <p className="text-gray-600 mt-1">Here's an overview of your services and bookings.</p>
           </div>
           <Avatar className="h-14 w-14">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={user?.avatar} alt={user?.name} />
+            {/* <AvatarFallback>{user?.avatar}</AvatarFallback> */}
           </Avatar>
         </div>
       </section>
@@ -85,15 +83,15 @@ const UserHome = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-gray-50 rounded-md">
             <p className="text-sm text-gray-500">Name</p>
-            <p className="font-medium">{user.name}</p>
+            <p className="font-medium">{user?.name}</p>
           </div>
           <div className="p-4 bg-gray-50 rounded-md">
             <p className="text-sm text-gray-500">Email</p>
-            <p className="font-medium">{user.email}</p>
+            <p className="font-medium">{user?.email}</p>
           </div>
           <div className="p-4 bg-gray-50 rounded-md">
             <p className="text-sm text-gray-500">Member Since</p>
-            <p className="font-medium">{user.registrationDate}</p>
+            <p className="font-medium">{user?.created_at}</p>
           </div>
         </div>
       </section>

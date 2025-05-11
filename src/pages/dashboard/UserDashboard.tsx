@@ -14,12 +14,14 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { User, Clock, Star, Settings, Home, LogOut, BookOpen, Heart } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/store/authSlice";
 import authService from "@/services/authService";
+import { RootState } from "@/store";
 
 const UserDashboard = () => {
   const [currentNavItem, setCurrentNavItem] = useState("home");
+  const { user } = useSelector((s: RootState) => s.auth)
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
@@ -54,8 +56,8 @@ const UserDashboard = () => {
                 <User className="h-4 w-4" />
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-medium">Jane Smith</span>
-                <span className="text-xs text-muted-foreground">user@example.com</span>
+                <span className="text-sm font-medium">{user?.name}</span>
+                <span className="text-xs text-muted-foreground">{user?.email}</span>
               </div>
             </div>
           </SidebarHeader>
