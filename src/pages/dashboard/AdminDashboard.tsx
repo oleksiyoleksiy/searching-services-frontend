@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, Link, useLocation, Outlet, Navigate, useNavigate } from "react-router-dom";
 import {
   ChevronDown, ChevronUp, Menu, Users, ShoppingBag,
@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 // import ServiceManagement from "./admin/ServiceManagement";
 // import Notifications from "./admin/Notifications";
 // import AdminSettings from "./admin/AdminSettings";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   Collapsible,
@@ -49,6 +49,8 @@ const AdminDashboard = () => {
       navigate('/auth/login')
     }
   }
+
+
 
   if (!isLoading && user && !hasPermission('admin', user)) return <NotFound />
 
@@ -278,7 +280,7 @@ const AdminDashboard = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Avatar>
-                  <AvatarFallback className="bg-localfind-600 text-white">A</AvatarFallback>
+                  <AvatarImage src={user?.avatar} className="bg-localfind-600 text-white object-cover" />
                 </Avatar>
                 <div className="hidden md:block">
                   <p className="text-sm font-medium">{user?.name}</p>
@@ -293,8 +295,8 @@ const AdminDashboard = () => {
           </div>
 
         </div>
-      </main>
-    </div>
+      </main >
+    </div >
   );
 };
 

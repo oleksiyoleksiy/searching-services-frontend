@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -6,53 +6,139 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Bell, Lock, User, Mail, AlertCircle } from "lucide-react";
+import { Bell, Lock, User, Mail, AlertCircle, CheckIcon } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { authActions } from "@/store/authSlice";
+import userService from "@/services/userService";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import ImageUpload from "@/components/ImageUpload";
+
+
+interface Errors {
+  name?: string[]
+  email?: string[]
+  phone_number?: string[]
+  address?: string[]
+  bio?: string[]
+  avatar?: string[]
+}
+
+interface ProfileData {
+  name: string
+  email: string
+  phone_number: string
+  address: string
+  bio: string
+  avatar: File | null
+  avatar_remove: 1 | 0
+}
+
 
 const AdminSettings = () => {
-  const [profileForm, setProfileForm] = useState({
-    name: "Admin User",
-    email: "admin@example.com",
-    phone: "+1 (555) 123-4567"
-  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState<Errors>({});
+  const { user } = useSelector((s: RootState) => s.auth)
+  const [avatar, setAvatar] = useState<string | undefined>()
+  const [profileData, setProfileData] = useState<ProfileData>({
+    name: '',
+    email: '',
+    phone_number: '',
+    address: '',
+    bio: '',
+    avatar: null,
+    avatar_remove: 0
+  })
+  const dispatch = useDispatch()
 
-  const [securityForm, setSecurityForm] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: ""
-  });
+  useEffect(() => {
+    if (user) {
 
-  const [notificationSettings, setNotificationSettings] = useState({
-    emailNotifications: true,
-    pushNotifications: false,
-    userRegistration: true,
-    newBookings: true,
-    serviceUpdates: true,
-    systemUpdates: true
-  });
 
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setProfileData({
+        name: user.name,
+        email: user.email,
+        phone_number: user.phone_number,
+        address: user.address,
+        bio: user.bio || '',
+        avatar: null,
+        avatar_remove: 0
+      })
+
+      if (user.is_have_avatar) {
+        setAvatar(user.avatar)
+      }
+    }
+  }, [user])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setProfileForm(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSecurityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSecurityForm(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleNotificationToggle = (setting: string) => {
-    setNotificationSettings(prev => ({
+    setProfileData(prev => ({
       ...prev,
-      [setting]: !prev[setting as keyof typeof prev]
+      [name]: value
     }));
   };
+
+  const handleLanguageChange = (value: string) => {
+    setProfileData(prev => ({
+      ...prev,
+      language: value
+    }));
+  };
+
+  const handleImageChange = (file: File | null, imageURL: string | null) => {
+    setProfileData(prev => ({ ...prev, avatar: file, avatar_remove: file ? 0 : 1 }))
+
+    if (imageURL) setAvatar(imageURL)
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+
+    try {
+      setIsSubmitting(true)
+
+      const response = await userService.update(profileData).finally(() => setIsSubmitting(false))
+
+      if (response) {
+        dispatch(authActions.setUser(response))
+        setIsSuccess(true)
+      }
+
+    } catch (e: any) {
+      setErrors(e.response?.data?.errors)
+    }
+
+  }
+
+  const renderErrors = (errors?: string[]) => {
+    return errors && <div className="flex flex-col gap-1">
+      {errors.map(error => (
+        <div key={error} className="text-red-500 text-sm">
+          {error}
+        </div>
+      ))}
+    </div>
+  }
+  // const handleSecurityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setSecurityForm(prev => ({ ...prev, [name]: value }));
+  // };
+
+  // const handleNotificationToggle = (setting: string) => {
+  //   setNotificationSettings(prev => ({
+  //     ...prev,
+  //     [setting]: !prev[setting as keyof typeof prev]
+  //   }));
+  // };
 
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Settings</h1>
 
       <Tabs defaultValue="profile" className="w-full">
-        <TabsList className="grid grid-cols-3 w-full max-w-md mb-8">
+        {/* <TabsList className="grid grid-cols-3 w-full max-w-md mb-8">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User className="h-4 w-4" /> Profile
           </TabsTrigger>
@@ -62,7 +148,7 @@ const AdminSettings = () => {
           <TabsTrigger value="notifications" className="flex items-center gap-2">
             <Bell className="h-4 w-4" /> Notifications
           </TabsTrigger>
-        </TabsList>
+        </TabsList> */}
 
         <TabsContent value="profile">
           <Card>
@@ -73,60 +159,76 @@ const AdminSettings = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-8">
-                <div className="flex flex-col md:flex-row gap-8 items-start">
-                  <div className="flex flex-col items-center">
-                    <Avatar className="h-24 w-24 mb-4">
-                      <AvatarImage src="/placeholder.svg" alt="Admin User" />
-                      <AvatarFallback className="text-2xl">A</AvatarFallback>
-                    </Avatar>
-                    <Button variant="outline" size="sm">
-                      Change Avatar
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="flex flex-col gap-2">
+
+                    <div className="flex flex-col items-center sm:flex-row sm:items-start gap-6">
+                      <ImageUpload
+                        defaultImage={avatar}
+                        onImageChange={handleImageChange}
+                        size="md"
+                        title="Profile Picture"
+                        description="Upload a new profile photo"
+                      />
+
+                      <div className="space-y-4 w-full">
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="fullName">Full Name</Label>
+                          <Input value={profileData.name} onChange={handleInputChange} name="name" id="fullName" placeholder="John Smith" />
+                          {renderErrors(errors?.name)}
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <Label htmlFor="email">Email Address</Label>
+                          <Input value={profileData.email} onChange={handleInputChange} name="email" id="email" type="email" placeholder="user@example.com" />
+                          {renderErrors(errors?.email)}
+                        </div>
+                      </div>
+                    </div>
+                    {renderErrors(errors?.avatar)}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input value={profileData.phone_number} onChange={handleInputChange} name="phone_number" id="phone" type="tel" placeholder="+1 (xxx) xxx-xxxx" />
+                    {renderErrors(errors?.phone_number)}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="address">Address</Label>
+                    <Input id="address" value={profileData.address} onChange={handleInputChange} name="address" placeholder="123 user St, Service City" />
+                    {renderErrors(errors?.address)}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="bio">Bio</Label>
+                    <Textarea
+                      id="bio"
+                      name="bio"
+                      rows={4}
+                      placeholder="Write something about yourself."
+                      value={profileData.bio} onChange={handleInputChange}
+                    />
+                    {renderErrors(errors?.bio)}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button type="submit" disabled={isSubmitting} className="bg-localfind-600 hover:bg-localfind-700">
+                      {isSubmitting ? 'Saving...' : 'Save Changes'}
                     </Button>
+                    {isSuccess && (
+                      <div className="flex items-center gap-1 text-sm text-green-600">
+                        <CheckIcon className="h-4 w-4" /> Profile updated successfully
+                      </div>
+                    )}
                   </div>
-
-                  <div className="flex-1 grid gap-6">
-                    <div className="grid gap-2">
-                      <Label htmlFor="name">Name</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={profileForm.name}
-                        onChange={handleProfileChange}
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={profileForm.email}
-                        onChange={handleProfileChange}
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="phone">Phone</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={profileForm.phone}
-                        onChange={handleProfileChange}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <Button>Save Changes</Button>
-                </div>
-              </div>
+                </form>
+              </CardContent>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="security">
+        {/* <TabsContent value="security">
           <Card>
             <CardHeader>
               <CardTitle>Security Settings</CardTitle>
@@ -258,7 +360,7 @@ const AdminSettings = () => {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
     </div>
   );

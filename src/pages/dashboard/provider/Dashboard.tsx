@@ -5,16 +5,14 @@ import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, Clock, User, Package, MessageSquare, Bell, LogOut } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   // Mock user data
-  const userData = {
-    name: "John Provider",
-    email: "john.provider@example.com",
-    serviceType: "Home Services",
-    registrationDate: "June 15, 2024",
-    profileImage: "https://i.pravatar.cc/150?img=3"
-  };
+  const { user } = useSelector((s: RootState) => s.auth)
+  const navigate = useNavigate()
 
   // Mock statistics
   const stats = [
@@ -53,7 +51,7 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Welcome back, {userData.name}</h1>
+          <h1 className="text-2xl font-bold">Welcome back, {user?.name}</h1>
           <p className="text-muted-foreground">Here's what's happening with your services today</p>
         </div>
       </div>
@@ -77,7 +75,7 @@ const Dashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="grid gap-6 md:grid-cols-7">
+      <div className="grid gap-6 lg:grid-cols-7">
         {/* Profile Information */}
         <Card className="md:col-span-2 overflow-hidden">
           <CardHeader className="bg-localfind-50 border-b pb-3">
@@ -86,30 +84,33 @@ const Dashboard = () => {
           <CardContent className="pt-6">
             <div className="flex flex-col items-center mb-6">
               <Avatar className="h-24 w-24 mb-2 border-4 border-localfind-100">
-                <img src={userData.profileImage} alt="Profile" />
+                <img className='object-center object-cover w-full h-full' src={user?.avatar} alt="Profile" />
               </Avatar>
-              <h3 className="font-semibold text-lg">{userData.name}</h3>
-              <Badge variant="outline" className="mt-1 bg-localfind-50">
-                {userData.serviceType}
-              </Badge>
+              <h3 className="font-semibold text-lg">{user?.name}</h3>
+              <div className="flex flex-wrap gap-1">
+                {user?.company?.categories.map((c) => <Badge key={c.name} variant="outline" className="mt-1 bg-localfind-50">
+                  {c.name}
+                </Badge>)}
+              </div>
+
             </div>
             <div className="space-y-3 text-sm">
               <div className="flex items-start">
                 <User className="h-4 w-4 mr-2 text-muted-foreground mt-0.5" />
-                <div>
+                <div className='w-full'>
                   <p className="font-medium">Email</p>
-                  <p className="text-muted-foreground">{userData.email}</p>
+                  <p className="text-muted-foreground w-full truncate">{user?.email}</p>
                 </div>
               </div>
               <div className="flex items-start">
                 <Calendar className="h-4 w-4 mr-2 text-muted-foreground mt-0.5" />
                 <div>
                   <p className="font-medium">Member Since</p>
-                  <p className="text-muted-foreground">{userData.registrationDate}</p>
+                  <p className="text-muted-foreground">{user?.created_at}</p>
                 </div>
               </div>
               <div className="pt-3">
-                <Button className="w-full bg-localfind-600 hover:bg-localfind-700" size="sm">
+                <Button onClick={() => navigate('/provider/dashboard/settings')} className="w-full bg-localfind-600 hover:bg-localfind-700" size="sm">
                   Edit Profile
                 </Button>
               </div>
