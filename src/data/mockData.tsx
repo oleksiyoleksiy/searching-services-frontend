@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import {
   Scissors,
   Wrench,
@@ -10,6 +10,7 @@ import {
   Utensils,
   ShoppingBag,
   Music,
+  Code2,
 } from 'lucide-react'
 
 export const categories = [
@@ -94,6 +95,23 @@ export const categories = [
     to: '/category/music-lessons',
   },
 ]
+
+export const categoryIcons: Record<number, { icon: ReactNode, color: string }> = {
+  1: {
+    icon: <Scissors className="h-8 w-8" />,
+    color: 'bg-pink-100',
+  },
+  2: { icon: <Wrench className="h-8 w-8" />, color: 'bg-blue-100' },
+  3: { icon: <GraduationCap className="h-8 w-8" />, color: 'bg-yellow-100' },
+  4: { icon: <Paintbrush className="h-8 w-8" />, color: 'bg-purple-100' },
+  5: { icon: <Car className="h-8 w-8" />, color: 'bg-red-100' },
+  6: { icon: <Home className="h-8 w-8" />, color: 'bg-green-100' },
+  7: { icon: <Heart className="h-8 w-8" />, color: 'bg-indigo-100' },
+  8: { icon: <Utensils className="h-8 w-8" />, color: 'bg-orange-100' },
+  9: { icon: <ShoppingBag className="h-8 w-8" />, color: 'bg-teal-100' },
+  10: { icon: <Music className="h-8 w-8" />, color: 'bg-cyan-100' },
+  11: { icon: <Code2 className="h-8 w-8" />, color: 'bg-cyan-100' },
+}
 
 export const serviceProviders = [
   {

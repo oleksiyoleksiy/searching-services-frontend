@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 interface CategoryCardProps {
   icon: React.ReactNode
   title: string
-  providerCount: number
+  providersCount: number
   color: string
   to: string
 }
@@ -12,7 +12,7 @@ interface CategoryCardProps {
 const CategoryCard: React.FC<CategoryCardProps> = ({
   icon,
   title,
-  providerCount,
+  providersCount,
   color,
   to,
 }) => {
@@ -29,7 +29,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         <h3 className="font-medium text-gray-800 group-hover:text-localfind-700 transition-colors">
           {title}
         </h3>
-        <p className="text-sm text-gray-500 mt-1">{providerCount} providers</p>
+        <p className="text-sm text-gray-500 mt-1">{providersCount} providers</p>
       </div>
     </Link>
   )

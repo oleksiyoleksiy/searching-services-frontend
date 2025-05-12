@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 interface SearchBarInitialValues {
-  service: string
+  search: string
   location: string
 }
 
@@ -18,17 +18,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
   simplified = false,
   initialValues = {
-    service: '',
+    search: '',
     location: '',
   },
 }) => {
-  const [service, setService] = useState(initialValues.service)
+  const [search, setSearch] = useState(initialValues.search)
   const [location, setLocation] = useState(initialValues.location)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (onSearch) {
-      onSearch(service, location)
+      onSearch(search, location)
     }
   }
 
@@ -48,16 +48,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
           type="text"
           placeholder="What service are you looking for?"
           className="w-full pl-10 h-11"
-          value={service}
-          onChange={e => setService(e.target.value)}
+          value={search}
+          onChange={e => setSearch(e.target.value)}
         />
-        {service && (
+        {search && (
           <Button
             type="button"
             variant="ghost"
             size="icon"
             className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6"
-            onClick={() => setService('')}
+            onClick={() => setSearch('')}
           >
             <X className="h-4 w-4" />
           </Button>

@@ -21,16 +21,16 @@ import {
 } from '@/components/ui/sheet'
 import { useSearchParams } from 'react-router-dom'
 
-type AvailabilityType = 'today' | 'weekend' | 'online'
+type AvailabilityType = 'today' | 'weekend'
 type PriceRangeType = 'any' | 'low' | 'medium' | 'high'
 type RatingType = '4plus' | '3plus'
 type FilterType = 'availability' | 'rating'
 type FilterValue = AvailabilityType | RatingType
 
-const availabilityOptions: AvailabilityType[] = ['today', 'weekend', 'online']
+const availabilityOptions: AvailabilityType[] = ['today', 'weekend']
 
 const FilterSection = () => {
-  const [distance, setDistance] = useState([5])
+  // const [distance, setDistance] = useState([5])
   const [priceRange, setPriceRange] = useState('any')
   const [availability, setAvailability] = useState<AvailabilityType[]>([])
   const [rating, setRating] = useState<RatingType[]>([])
@@ -75,19 +75,20 @@ const FilterSection = () => {
   }
 
   const handleResetFiltersButtonClick = () => {
-    setDistance([5])
+    // setDistance([5])
     setPriceRange('any')
     setRating([])
     setAvailability([])
+    setSearchParams(new URLSearchParams())
   }
 
   const handleApplyFiltersButtonClick = () => {
     const params = new URLSearchParams()
-    
-    if (searchParams.has('service')) params.set('service', searchParams.get('service') || '')
+
+    if (searchParams.has('search')) params.set('search', searchParams.get('search') || '')
     if (searchParams.has('location')) params.set('location', searchParams.get('location') || '')
 
-    params.set('distance', distance.join(','))
+    // params.set('distance', distance.join(','))
     params.set('priceRange', priceRange)
     availability.forEach(val => params.append('availability', val))
     rating.forEach(val => params.append('rating', val))
@@ -110,8 +111,8 @@ const FilterSection = () => {
             </SheetHeader>
             <div className="py-4 overflow-y-auto">
               <MobileFilterContent
-                distance={distance}
-                setDistance={setDistance}
+                // distance={distance}
+                // setDistance={setDistance}
                 priceRange={priceRange}
                 setPriceRange={setPriceRange}
                 renderAvailabilityCheckboxParams={
@@ -144,7 +145,7 @@ const FilterSection = () => {
           <h3 className="text-lg font-medium mb-3">Filters</h3>
 
           <div className="space-y-4">
-            <div>
+            {/* <div>
               <h4 className="text-sm font-medium mb-2">Distance</h4>
               <div className="mb-1">
                 <Slider
@@ -160,7 +161,7 @@ const FilterSection = () => {
                 <span>Within {distance} km</span>
                 <span>20 km</span>
               </div>
-            </div>
+            </div> */}
 
             <div>
               <h4 className="text-sm font-medium mb-2">Price Range</h4>
@@ -194,13 +195,13 @@ const FilterSection = () => {
                   />
                   <Label htmlFor="weekend">Weekend availability</Label>
                 </div>
-                <div className="flex items-center space-x-2">
+                {/* <div className="flex items-center space-x-2">
                   <Checkbox
                     {...renderAvailabilityCheckboxParams('online')}
                     id="online"
                   />
                   <Label htmlFor="online">Online booking</Label>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -246,15 +247,15 @@ const FilterSection = () => {
 }
 
 const MobileFilterContent = ({
-  distance,
-  setDistance,
+  // distance,
+  // setDistance,
   priceRange,
   setPriceRange,
   renderAvailabilityCheckboxParams,
   renderRatingCheckboxParams,
 }: {
-  distance: number[]
-  setDistance: (value: number[]) => void
+  // distance: number[]
+  // setDistance: (value: number[]) => void
   priceRange: string
   setPriceRange: (value: string) => void
   renderAvailabilityCheckboxParams: (value: AvailabilityType) => {}
@@ -262,7 +263,7 @@ const MobileFilterContent = ({
 }) => {
   return (
     <div className="space-y-6 px-1">
-      <div>
+      {/* <div>
         <h4 className="text-sm font-medium mb-2">Distance</h4>
         <div className="mb-1">
           <Slider
@@ -278,7 +279,7 @@ const MobileFilterContent = ({
           <span>Within {distance} km</span>
           <span>20 km</span>
         </div>
-      </div>
+      </div> */}
 
       <div>
         <h4 className="text-sm font-medium mb-2">Price Range</h4>
@@ -312,13 +313,13 @@ const MobileFilterContent = ({
             />
             <Label htmlFor="mobile-weekend">Weekend availability</Label>
           </div>
-          <div className="flex items-center space-x-2">
+          {/* <div className="flex items-center space-x-2">
             <Checkbox
               {...renderAvailabilityCheckboxParams('online')}
               id="mobile-online"
             />
             <Label htmlFor="mobile-online">Online booking</Label>
-          </div>
+          </div> */}
         </div>
       </div>
 

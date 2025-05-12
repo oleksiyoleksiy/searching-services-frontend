@@ -1,15 +1,36 @@
-import React, { useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import CategoryCard from '@/components/CategoryCard'
-import { categories } from '@/data/mockData'
+import { categoryIcons } from '@/data/mockData'
 import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import categoryService from '@/services/categoryService'
+
+interface CategoryLink {
+  id: number,
+  name: string
+  icon: ReactNode
+  color: string
+  providers_count: number
+  to: string
+}
 
 const AllCategories = () => {
   const [search, setSearch] = useState<string>('')
+  const [categories, setCategories] = useState<CategoryLink[]>([])
 
   const filteredCategories = categories.filter(c =>
-    c.title.toLowerCase().includes(search.toLocaleLowerCase())
+    c.name.toLowerCase().includes(search.toLocaleLowerCase())
   )
+
+  const fetchCategories = async () => {
+    const response = await categoryService.index()
+
+    if (response) {
+      setCategories(response.map(c => ({ ...c, icon: categoryIcons[c.id]?.icon, color: categoryIcons[c.id]?.color, to: `/category/${c.id}` })))
+    }
+  }
+
+  useEffect(() => { fetchCategories() }, [])
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -45,8 +66,8 @@ const AllCategories = () => {
               <CategoryCard
                 key={category.id}
                 icon={category.icon}
-                title={category.title}
-                providerCount={category.providerCount}
+                title={category.name}
+                providersCount={category.providers_count}
                 color={category.color}
                 to={category.to}
               />
@@ -70,15 +91,15 @@ const AllCategories = () => {
                     <div className="mr-4 text-gray-800">{category.icon}</div>
                     <div>
                       <h3 className="font-bold text-xl text-gray-900">
-                        {category.title}
+                        {category.name}
                       </h3>
                       <p className="text-gray-700">
-                        {category.providerCount} providers
+                        {category.providers_count} providers
                       </p>
                     </div>
                   </div>
                   <p className="text-gray-700 mb-4">
-                    Find trusted {category.title.toLowerCase()} professionals
+                    Find trusted {category.name.toLowerCase()} professionals
                     near you. Compare prices, read reviews, and book
                     appointments online.
                   </p>
@@ -86,7 +107,7 @@ const AllCategories = () => {
                     href={category.to}
                     className="inline-block bg-white text-localfind-600 font-medium px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    Explore {category.title}
+                    Explore {category.name}
                   </a>
                 </div>
               ))}

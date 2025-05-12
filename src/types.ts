@@ -19,6 +19,7 @@ interface Company {
 export interface Category {
   id: number
   name: string
+  providers_count: number
 }
 
 export interface User {

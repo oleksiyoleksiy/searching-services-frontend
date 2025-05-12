@@ -8,6 +8,7 @@ import FilterSection from '@/components/FilterSection'
 import { Button } from '@/components/ui/button'
 import { categories, serviceProviders } from '@/data/mockData'
 import { ChevronRight } from 'lucide-react'
+import categoryService from '@/services/categoryService'
 
 interface Categories {
   id: string
@@ -31,6 +32,8 @@ const CategoryPage = () => {
   const handleSearch = (service: string, location: string) => {
     setSearchParams({ service, location })
   }
+
+  
 
   useEffect(() => {
     setCategory(categories.find(c => c.id === categoryId) || categories[0])
