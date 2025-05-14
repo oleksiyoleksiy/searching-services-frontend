@@ -28,6 +28,7 @@ interface Errors {
   company_name?: string[]
   categories?: string[]
   years_of_experience?: string[]
+  company_description?: string[]
 }
 
 interface ProfileData {
@@ -41,6 +42,7 @@ interface ProfileData {
   company_name: string
   categories: string[]
   years_of_experience: string
+  company_description: string
 }
 
 const ProfileSettings = () => {
@@ -59,7 +61,8 @@ const ProfileSettings = () => {
     avatar_remove: 0,
     company_name: '',
     categories: [],
-    years_of_experience: ''
+    years_of_experience: '',
+    company_description: ''
   })
   const [categories, setCategories] = useState<Category[]>([])
   const dispatch = useDispatch()
@@ -78,7 +81,8 @@ const ProfileSettings = () => {
         avatar_remove: 0,
         company_name: user.company?.name || '',
         years_of_experience: user.company?.years_of_experience || '',
-        categories: user.company?.categories.map(c => String(c.id)) || []
+        categories: user.company?.categories.map(c => String(c.id)) || [],
+        company_description: user.company?.description || ''
       })
 
       if (user.is_have_avatar) {
@@ -275,6 +279,17 @@ const ProfileSettings = () => {
                           onChange={handleInputChange}
                         />
                         {renderErrors(errors?.years_of_experience)}
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="company_description">Description</Label>
+                        <Textarea
+                          id="company_description"
+                          name="company_description"
+                          rows={4}
+                          placeholder="describe the scope of your company's activities"
+                          value={profileData.company_description} onChange={handleInputChange}
+                        />
+                        {renderErrors(errors?.company_description)}
                       </div>
                     </div>
                   </CardContent>

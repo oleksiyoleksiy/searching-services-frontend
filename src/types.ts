@@ -9,17 +9,31 @@ interface Role {
   permissions: Permission[]
 }
 
-interface Company {
+export interface Company {
   id: number
   name: string
   years_of_experience: string
+  description: string
   categories: Category[]
+  reviews_count: number
+  preview: string
+  address: string
+  rating: number
+  availability: string
+  price_from: number
 }
 
 export interface Category {
   id: number
   name: string
   providers_count: number
+}
+
+export interface Service {
+  id: number
+  name: string
+  price: number
+  created_at: string
 }
 
 export interface User {

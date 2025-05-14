@@ -14,7 +14,6 @@ export interface ServiceProviderProps {
   reviewCount: number
   price: string
   location: string
-  distance: string
   availability: string
   featured?: boolean
 }
@@ -29,7 +28,6 @@ const ServiceCard: React.FC<ServiceProviderProps> = ({
   reviewCount,
   price,
   location,
-  distance,
   availability,
   featured,
 }) => {
@@ -55,14 +53,14 @@ const ServiceCard: React.FC<ServiceProviderProps> = ({
       </div>
 
       <div className="p-4">
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2 gap-2">
           <Badge variant="outline" className="text-xs">
             {category}
             {subcategory && ` · ${subcategory}`}
           </Badge>
           <div className="flex items-center">
             <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 mr-1" />
-            <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+            <span className="text-sm font-medium">{Number(rating).toFixed(1)}</span>
             <span className="text-xs text-gray-500 ml-1">({reviewCount})</span>
           </div>
         </div>
@@ -73,7 +71,7 @@ const ServiceCard: React.FC<ServiceProviderProps> = ({
           <div className="flex items-center text-sm text-gray-600">
             <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
             <span className="line-clamp-1">
-              {location} · {distance} away
+              {location}
             </span>
           </div>
 

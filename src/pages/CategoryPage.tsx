@@ -6,38 +6,68 @@ import SearchBar from '@/components/SearchBar'
 import ServiceCard from '@/components/ServiceCard'
 import FilterSection from '@/components/FilterSection'
 import { Button } from '@/components/ui/button'
-import { categories, serviceProviders } from '@/data/mockData'
+import { categories, categoryIcons, serviceProviders } from '@/data/mockData'
 import { ChevronRight } from 'lucide-react'
 import categoryService from '@/services/categoryService'
+import { Company } from '@/types'
+import providerService from '@/services/providerService'
 
-interface Categories {
+interface Category {
   id: string
-  title: string
+  name: string
   icon: ReactNode
-  providerCount: number
+  providers_count: number
   color: string
-  to: string
 }
 
 const CategoryPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>()
 
-  const [category, setCategory] = useState<Categories>(categories[0])
+  const [category, setCategory] = useState<Category>({
+    id: '',
+    name: '',
+    icon: <></>,
+    providers_count: 0,
+    color: '',
+  })
   const [searchParams, setSearchParams] = useSearchParams()
   // In a real app, you would filter providers by the selected category
-  const filteredProviders = serviceProviders.filter(p =>
-    p.category.toLowerCase().includes(category?.title.toLowerCase() || '')
-  )
+  const [providers, setProviders] = useState<Company[]>([])
 
-  const handleSearch = (service: string, location: string) => {
-    setSearchParams({ service, location })
+  const handleSearch = (search: string, location: string) => {
+    if (search !== '') {
+      setSearchParams({ search })
+    }
+    if (location !== '') {
+      setSearchParams({ location })
+
+    }
   }
 
-  
+
+  const fetchCategory = async () => {
+    const response = await providerService.index(Number(categoryId), searchParams.toString())
+
+    if (response) {
+      setCategory({
+        ...response.category,
+        id: String(response.category.id),
+        icon: categoryIcons[Number(response.category.id)]?.icon,
+        color: categoryIcons[Number(response.category.id)]?.color,
+      })
+
+      setProviders(response.providers)
+    }
+  }
+
 
   useEffect(() => {
-    setCategory(categories.find(c => c.id === categoryId) || categories[0])
-  }, [categoryId])
+    // setCategory(categories.find(c => c.id === categoryId) || categories[0])
+    fetchCategory()
+
+  }, [searchParams])
+
+
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -50,10 +80,10 @@ const CategoryPage = () => {
                 {category.icon}
               </div>
               <h1 className="text-3xl md:text-4xl font-bold mb-2 text-gray-900">
-                {category.title}
+                {category.name}
               </h1>
               <p className="text-lg text-gray-700 mb-6 max-w-2xl">
-                Find the best {category.title.toLowerCase()} service providers
+                Find the best {category.name.toLowerCase()} service providers
                 in your area. Browse, compare, and book with ease.
               </p>
               <div className="w-full max-w-2xl">
@@ -79,7 +109,7 @@ const CategoryPage = () => {
               </a>
               <ChevronRight className="h-4 w-4 mx-1 text-gray-400" />
               <span className="text-gray-800 font-medium">
-                {category.title}
+                {category.name}
               </span>
             </div>
           </div>
@@ -97,17 +127,26 @@ const CategoryPage = () => {
             <div className="md:w-3/4">
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  {category.title} Service Providers
+                  {category.name} Service Providers
                 </h2>
                 <p className="text-gray-600">
-                  {filteredProviders.length} providers available in your area
+                  {providers?.length} providers available in your area
                 </p>
               </div>
 
               <div className="provider-grid">
-                {filteredProviders.length > 0 ? (
-                  filteredProviders.map(provider => (
-                    <ServiceCard key={provider.id} {...provider} />
+                {providers?.length > 0 ? (
+                  providers?.map(provider => (
+                    <ServiceCard
+                      price={String(provider.price_from)}
+                      availability={provider.availability}
+                      reviewCount={provider.reviews_count}
+                      rating={provider.rating}
+                      key={provider.id}
+                      id={String(provider.id)}
+                      category={provider.categories.map(c => c.name).join(' · ')}
+                      name={provider.name} image={provider.preview}
+                      location={provider.address} />
                   ))
                 ) : (
                   <div className="col-span-full py-12 text-center">
@@ -120,7 +159,7 @@ const CategoryPage = () => {
                 )}
               </div>
 
-              {filteredProviders.length > 0 && (
+              {providers?.length > 0 && (
                 <div className="mt-8 flex justify-center">
                   <Button variant="outline" className="text-localfind-600">
                     Load More Providers

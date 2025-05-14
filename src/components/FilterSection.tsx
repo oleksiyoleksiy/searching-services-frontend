@@ -74,26 +74,38 @@ const FilterSection = () => {
     }
   }
 
-  const handleResetFiltersButtonClick = () => {
-    // setDistance([5])
-    setPriceRange('any')
-    setRating([])
-    setAvailability([])
-    setSearchParams(new URLSearchParams())
-  }
-
-  const handleApplyFiltersButtonClick = () => {
+  const getDefaultSearchParams = (): URLSearchParams => {
     const params = new URLSearchParams()
 
     if (searchParams.has('search')) params.set('search', searchParams.get('search') || '')
     if (searchParams.has('location')) params.set('location', searchParams.get('location') || '')
 
-    // params.set('distance', distance.join(','))
+    return params
+  }
+
+  const handleResetFiltersButtonClick = () => {
+    // setDistance([5])
+    setPriceRange('any')
+    setRating([])
+    setAvailability([])
+
+    setSearchParams(getDefaultSearchParams())
+  }
+
+  const handleApplyFiltersButtonClick = () => {
+    const params = getDefaultSearchParams()
+
     params.set('priceRange', priceRange)
-    availability.forEach(val => params.append('availability', val))
-    rating.forEach(val => params.append('rating', val))
+    availability.forEach(val => params.append('availability[]', val))
+    rating.forEach(val => params.append('rating[]', val))
     setSearchParams(params)
   }
+
+  useEffect(() => {
+    setAvailability(searchParams.has('availability[]') ? searchParams.getAll('availability[]') as AvailabilityType[] : []);
+    setRating(searchParams.has('rating[]') ? searchParams.getAll('rating[]') as RatingType[] : []);
+    setPriceRange(searchParams.has('priceRange') ? searchParams.get('priceRange') as PriceRangeType : 'any')
+  }, [searchParams])
 
   return (
     <>
