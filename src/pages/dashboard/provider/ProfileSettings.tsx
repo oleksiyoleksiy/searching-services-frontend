@@ -13,7 +13,7 @@ import userService from '@/services/userService';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import ImageUpload from '@/components/ImageUpload';
-import { Category } from '@/types';
+import { Category, ProviderProfileData } from '@/types';
 import categoryService from '@/services/categoryService';
 import { MultiSelect } from '@/components/ui/multi-select';
 import providerService from '@/services/providerService';
@@ -31,27 +31,13 @@ interface Errors {
   company_description?: string[]
 }
 
-interface ProfileData {
-  name: string
-  email: string
-  phone_number: string
-  address: string
-  bio: string
-  avatar: File | null
-  avatar_remove: 1 | 0
-  company_name: string
-  categories: string[]
-  years_of_experience: string
-  company_description: string
-}
-
 const ProfileSettings = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const { user } = useSelector((s: RootState) => s.auth)
   const [avatar, setAvatar] = useState<string | undefined>()
-  const [profileData, setProfileData] = useState<ProfileData>({
+  const [profileData, setProfileData] = useState<ProviderProfileData>({
     name: '',
     email: '',
     phone_number: '',
@@ -62,7 +48,8 @@ const ProfileSettings = () => {
     company_name: '',
     categories: [],
     years_of_experience: '',
-    company_description: ''
+    company_description: '',
+    description: '',
   })
   const [categories, setCategories] = useState<Category[]>([])
   const dispatch = useDispatch()
@@ -82,7 +69,8 @@ const ProfileSettings = () => {
         company_name: user.company?.name || '',
         years_of_experience: user.company?.years_of_experience || '',
         categories: user.company?.categories.map(c => String(c.id)) || [],
-        company_description: user.company?.description || ''
+        company_description: user.company?.description || '',
+        description: user.company?.description || '',
       })
 
       if (user.is_have_avatar) {
@@ -100,7 +88,7 @@ const ProfileSettings = () => {
   }
 
   useEffect(() => {
-    fetchCategories()
+    fetchCategories()    
   }, [])
 
 
@@ -125,8 +113,9 @@ const ProfileSettings = () => {
     if (imageURL) setAvatar(imageURL)
   }
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {  
     e.preventDefault()
+    
 
     try {
       setIsSubmitting(true)
@@ -140,7 +129,7 @@ const ProfileSettings = () => {
 
     } catch (e: any) {
       console.log(e);
-      
+
       setErrors(e.response?.data?.errors)
     }
 

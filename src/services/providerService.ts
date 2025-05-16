@@ -1,12 +1,10 @@
 import axiosInstance from '../api/axiosInstance'
-import { Company, ProviderShow, Review, User } from '../types'
-
-
-
+import { Company, ProviderProfileData, ProviderShow, RegisterData, Review, User } from '../types'
 
 interface Service {
   index: (params?: string) => Promise<Company[] | undefined>
   show: (id: number, params?: string) => Promise<ProviderShow | undefined>
+  update: (data: ProviderProfileData) => Promise<User | undefined>
 }
 
 export default <Service>{
@@ -25,5 +23,9 @@ export default <Service>{
     } catch (e: any) {
       console.log(e)
     }
+  },
+  async update(data) {
+    const response = await axiosInstance.post<User>(`/provider/update`, data)
+    return response.data
   }
 }

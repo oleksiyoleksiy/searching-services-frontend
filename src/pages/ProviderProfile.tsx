@@ -18,10 +18,16 @@ import { useEffect, useState } from 'react'
 import { ProviderShow } from '@/types'
 import providerService from '@/services/providerService'
 import { set } from 'date-fns'
+import BookingModal from '@/components/BookingModal'
+import ReviewModal from '@/components/ReviewModal'
+import SignInModal from '@/components/SignInModal'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store'
 
 const ProviderProfile = () => {
   const { id } = useParams<{ id: string }>()
   const [provider, setProvider] = useState<ProviderShow>()
+  const { user } = useSelector((s: RootState) => s.auth)
 
   const fetchProvider = async () => {
     const response = await providerService.show(Number(id))
@@ -35,7 +41,33 @@ const ProviderProfile = () => {
     fetchProvider()
   }, [])
 
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [signInModalOpen, setSignInModalOpen] = useState(false);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | undefined>(undefined);
+
+  const handleBookAppointment = () => {
+    if (!user) {
+      setSignInModalOpen(true);
+      return;
+    }
+
+    setSelectedServiceId(undefined);
+    setBookingModalOpen(true);
+  };
+
+  const handleServiceSelect = (serviceId: string) => {
+    if (!user) {
+      setSignInModalOpen(true);
+      return;
+    }
+
+    setSelectedServiceId(serviceId);
+    setBookingModalOpen(true);
+  };
+
   if (!provider) return null
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <main className="flex-grow">
@@ -124,6 +156,7 @@ const ProviderProfile = () => {
                 <Button
                   className="w-full md:w-auto bg-localfind-600 hover:bg-localfind-700"
                   size="lg"
+                  onClick={handleBookAppointment}
                 >
                   Book an Appointment
                 </Button>
@@ -167,6 +200,7 @@ const ProviderProfile = () => {
                         variant="outline"
                         size="sm"
                         className="text-localfind-600 border-localfind-600"
+                        onClick={() => handleServiceSelect(String(item.id))}
                       >
                         Select
                         <ChevronRight className="ml-1 h-4 w-4" />
@@ -180,7 +214,10 @@ const ProviderProfile = () => {
             <TabsContent value="reviews" className="bg-white rounded-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold">Customer Reviews</h2>
-                <Button className="bg-localfind-600 hover:bg-localfind-700">
+                <Button
+                  className="bg-localfind-600 hover:bg-localfind-700"
+                  onClick={() => setReviewModalOpen(true)}
+                >
                   Write a Review
                 </Button>
               </div>
@@ -273,7 +310,6 @@ const ProviderProfile = () => {
           </Tabs>
         </div>
 
-        {/* Booking Section */}
         <div className="bg-white border-t mt-8">
           <div className="container mx-auto px-4 py-8">
             <div className="text-center max-w-2xl mx-auto">
@@ -287,6 +323,7 @@ const ProviderProfile = () => {
               <Button
                 className="bg-localfind-600 hover:bg-localfind-700"
                 size="lg"
+                onClick={handleBookAppointment}
               >
                 <Calendar className="mr-2 h-5 w-5" />
                 Book an Appointment
@@ -295,6 +332,24 @@ const ProviderProfile = () => {
           </div>
         </div>
       </main>
+
+      <SignInModal open={signInModalOpen} onOpenChange={setSignInModalOpen} />
+
+      <BookingModal
+        open={bookingModalOpen}
+        onOpenChange={setBookingModalOpen}
+        providerId={String(provider.id)}
+        services={provider.services}
+        providerName={provider.name}
+        preselectedService={selectedServiceId}
+      />
+
+      <ReviewModal
+        open={reviewModalOpen}
+        onOpenChange={setReviewModalOpen}
+        providerId={String(provider.id)}
+        providerName={provider.name}
+      />
     </div>
   )
 }

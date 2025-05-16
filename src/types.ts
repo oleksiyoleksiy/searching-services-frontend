@@ -52,7 +52,7 @@ export interface Service {
   created_at: string
 }
 
-interface Availability {
+export interface Availability {
   day: string,
   start: string,
   end: string,
@@ -95,6 +95,21 @@ export interface User {
   created_at: string
   company: Company | null
   postal_code: string
+}
+
+export interface ProviderProfileData {
+  name: string
+  email: string
+  phone_number: string
+  address: string
+  bio: string
+  avatar: File | null
+  avatar_remove: 1 | 0
+  company_name: string
+  categories: string[]
+  years_of_experience: string
+  company_description: string
+  description: string
 }
 
 export interface ApplicationData {

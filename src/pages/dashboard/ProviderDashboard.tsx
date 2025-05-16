@@ -18,10 +18,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import authService from "@/services/authService";
 import { authActions } from "@/store/authSlice";
+import { hasPermission } from "@/utils/permissions";
+import NotFound from "../NotFound";
 
 const ProviderDashboard = () => {
   const [currentNavItem, setCurrentNavItem] = useState("services");
-  const { user } = useSelector((s: RootState) => s.auth)
+  const { user, isLoading } = useSelector((s: RootState) => s.auth)
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
@@ -38,6 +40,8 @@ const ProviderDashboard = () => {
       navigate('/auth/login')
     }
   }
+
+  if (!isLoading && user && !hasPermission('provider', user)) return <NotFound />
 
   return (
     <SidebarProvider>
