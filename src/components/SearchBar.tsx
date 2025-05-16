@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 
 interface SearchBarInitialValues {
   search: string
-  location: string
+  postal_code: string
 }
 
 interface SearchBarProps {
@@ -19,16 +19,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
   simplified = false,
   initialValues = {
     search: '',
-    location: '',
+    postal_code: '',
   },
 }) => {
   const [search, setSearch] = useState(initialValues.search)
-  const [location, setLocation] = useState(initialValues.location)
+  const [postalCode, setPostalCode] = useState(initialValues.postal_code)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (onSearch) {
-      onSearch(search, location)
+      onSearch(search, postalCode)
     }
   }
 
@@ -68,18 +68,19 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
         <Input
           type="text"
-          placeholder="Your location"
+          placeholder="Postal Code"  
           className="w-full pl-10 h-11"
-          value={location}
-          onChange={e => setLocation(e.target.value)}
+          value={postalCode}
+          pattern="[0-9]{5}"
+          onChange={e => setPostalCode(e.target.value)}
         />
-        {location && (
+        {postalCode && (
           <Button
             type="button"
             variant="ghost"
             size="icon"
             className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6"
-            onClick={() => setLocation('')}
+            onClick={() => setPostalCode('')}
           >
             <X className="h-4 w-4" />
           </Button>

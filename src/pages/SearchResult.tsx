@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import SearchBar from '@/components/SearchBar'
@@ -9,15 +9,31 @@ import { serviceProviders } from '@/data/mockData'
 import { Grid, List, SlidersHorizontal, MapPin } from 'lucide-react'
 import { Star, Clock } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
+import providerService from '@/services/providerService'
+import { set } from 'date-fns'
+import { Company } from '@/types'
 
 const SearchResults = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [searchParams, setSearchParams] = useSearchParams()
+  const [providers, setProviders] = useState<Company[]>([])
 
-  const handleSearch = (service: string, location: string) => {
-    setSearchParams({ service, location })
+  const handleSearch = (search: string, postalCode: string) => {
+    setSearchParams({ search, postalCode })
     // In a real app, this would fetch results from an API
   }
+
+  const fetchProviders = async () => {
+    const response = await providerService.index(searchParams.toString())
+
+    if (response) {
+      setProviders(response)
+    }
+  }
+
+  useEffect(() => {
+    fetchProviders()
+  }, [searchParams])
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -28,8 +44,8 @@ const SearchResults = () => {
               onSearch={handleSearch}
               simplified={true}
               initialValues={{
-                service: searchParams.get('service') || '',
-                location: searchParams.get('location') || '',
+                search: searchParams.get('search') || '',
+                postal_code: searchParams.get('postal_code') || '',
               }}
             />
           </div>
@@ -40,8 +56,8 @@ const SearchResults = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-xl font-semibold">
-                  {searchParams.get('service')} in{' '}
-                  {searchParams.get('location')}
+                  {searchParams.get('search')} in{' '}
+                  {searchParams.get('postal_code')}
                 </h1>
                 <p className="text-gray-500 text-sm">
                   {serviceProviders.length} service providers found
@@ -89,13 +105,13 @@ const SearchResults = () => {
             <div className="md:w-3/4">
               {viewMode === 'grid' ? (
                 <div className="provider-grid">
-                  {serviceProviders.map(provider => (
-                    <ServiceCard key={provider.id} {...provider} />
+                  {providers.map(provider => (
+                    <ServiceCard key={provider.id} provider={provider} />
                   ))}
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {serviceProviders.map(provider => (
+                  {providers.map(provider => (
                     <div
                       key={provider.id}
                       className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row"
@@ -111,7 +127,7 @@ const SearchResults = () => {
                         <div className="flex items-center justify-between mb-2">
                           <div>
                             <div className="text-sm text-gray-500 mb-1">
-                              {provider.category} · {provider.subcategory}
+                              {provider.categories.map(c => c.name).join(' · ')}
                             </div>
                             <h3 className="text-xl font-semibold">
                               {provider.name}
@@ -120,10 +136,10 @@ const SearchResults = () => {
                           <div className="flex items-center">
                             <Star className="w-5 h-5 text-yellow-400 fill-yellow-400 mr-1" />
                             <span className="font-medium">
-                              {provider.rating.toFixed(1)}
+                              {Number(provider.rating).toFixed(1)}
                             </span>
                             <span className="text-sm text-gray-500 ml-1">
-                              ({provider.reviewCount})
+                              ({provider.reviews_count})
                             </span>
                           </div>
                         </div>
@@ -132,7 +148,7 @@ const SearchResults = () => {
                           <div className="flex items-center text-sm text-gray-600">
                             <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
                             <span>
-                              {provider.location} · {provider.distance} away
+                              {provider.address}, {provider.postal_code}
                             </span>
                           </div>
                           <div className="flex items-center text-sm text-gray-600">

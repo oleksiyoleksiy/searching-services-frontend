@@ -1,14 +1,9 @@
 import axiosInstance from '../api/axiosInstance'
-import { User } from '../types'
+import { RegisterData, User } from '../types'
 
 interface LoginData {
   email: string
   password: string
-}
-
-interface RegisterData extends LoginData {
-  name: string
-  password_confirmation: string
 }
 
 interface AuthResponse {

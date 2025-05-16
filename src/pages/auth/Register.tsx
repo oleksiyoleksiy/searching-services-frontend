@@ -19,13 +19,14 @@ import authService from '@/services/authService'
 import { authActions } from '@/store/authSlice'
 import NotFound from '../NotFound'
 import { MultiSelect } from '@/components/ui/multi-select'
-import { Category } from '@/types'
+import { Category, RegisterData } from '@/types'
 import categoryService from '@/services/categoryService'
 
 interface Errors {
   name?: string[]
   email?: string[]
   address?: string[]
+  postal_code?: string[]
   password?: string[]
   password_confirmation?: string[]
   user_type?: string[]
@@ -35,23 +36,11 @@ interface Errors {
   categories?: string[]
 }
 
-interface FormData {
-  name: string
-  email: string
-  address: string
-  password: string
-  password_confirmation: string
-  company_name: string
-  years_of_experience: string
-  phone_number: string
-  user_type: 'client' | 'provider'
-  categories: string[]
-}
-
 export default function Register() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<RegisterData>({
     name: '',
     email: '',
+    postal_code: '',
     address: '',
     password: '',
     password_confirmation: '',
@@ -96,7 +85,7 @@ export default function Register() {
       return
     }
 
-    try {  
+    try {
       const response = await authService.register(formData)
 
       if (response) {
@@ -199,18 +188,35 @@ export default function Register() {
               />
               {renderErrors(errors?.email)}
             </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="address">Address</Label>
-              <Input
-                id="address"
-                type="address"
-                name='address'
-                placeholder="123 user Str, New York City"
-                value={formData.address}
-                onChange={handleInputChange}
-                required
-              />
-              {renderErrors(errors?.address)}
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-col gap-2 w-full">
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  type="address"
+                  name='address'
+                  placeholder="123 Main St"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  required
+                />
+                {renderErrors(errors?.address)}
+              </div>
+              <div className="flex flex-col gap-2 w-full">
+                <Label htmlFor="postal_code">Postal code</Label>
+                <Input
+                  id="postal_code"
+                  type="postal_code"
+                  name='postal_code'
+                  placeholder="88000"
+                  // regex={/^\d{5}$/}
+                  pattern="[0-9]{5}"
+                  value={formData.postal_code}
+                  onChange={handleInputChange}
+                  required
+                />
+                {renderErrors(errors?.postal_code)}
+              </div>
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="phone_number">Phone number</Label>

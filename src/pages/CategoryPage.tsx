@@ -8,9 +8,8 @@ import FilterSection from '@/components/FilterSection'
 import { Button } from '@/components/ui/button'
 import { categories, categoryIcons, serviceProviders } from '@/data/mockData'
 import { ChevronRight } from 'lucide-react'
-import categoryService from '@/services/categoryService'
 import { Company } from '@/types'
-import providerService from '@/services/providerService'
+import categoryProviderService from '@/services/categoryProviderService'
 
 interface Category {
   id: string
@@ -31,22 +30,21 @@ const CategoryPage = () => {
     color: '',
   })
   const [searchParams, setSearchParams] = useSearchParams()
-  // In a real app, you would filter providers by the selected category
   const [providers, setProviders] = useState<Company[]>([])
 
-  const handleSearch = (search: string, location: string) => {
+  const handleSearch = (search: string, postalCode: string) => {
     if (search !== '') {
       setSearchParams({ search })
     }
-    if (location !== '') {
-      setSearchParams({ location })
+    if (postalCode !== '') {
+      setSearchParams({ postalCode })
 
     }
   }
 
 
   const fetchCategory = async () => {
-    const response = await providerService.index(Number(categoryId), searchParams.toString())
+    const response = await categoryProviderService.index(Number(categoryId), searchParams.toString())
 
     if (response) {
       setCategory({
@@ -138,15 +136,8 @@ const CategoryPage = () => {
                 {providers?.length > 0 ? (
                   providers?.map(provider => (
                     <ServiceCard
-                      price={String(provider.price_from)}
-                      availability={provider.availability}
-                      reviewCount={provider.reviews_count}
-                      rating={provider.rating}
-                      key={provider.id}
-                      id={String(provider.id)}
-                      category={provider.categories.map(c => c.name).join(' · ')}
-                      name={provider.name} image={provider.preview}
-                      location={provider.address} />
+                      provider={provider}
+                    />
                   ))
                 ) : (
                   <div className="col-span-full py-12 text-center">

@@ -8,14 +8,14 @@ interface ShowResponse {
 }
 
 interface Service {
-  index: () => Promise<Category[] | undefined>
+  index: (params?: string) => Promise<Category[] | undefined>
   show: (id: number, params?: string) => Promise<ShowResponse | undefined>
 }
 
 export default <Service>{
-  async index() {
+  async index(params) {
     try {
-      const response = await axiosInstance.get<Category[]>('/category')
+      const response = await axiosInstance.get<Category[]>(`/category?${params}`)
       return response.data
     } catch (e: any) {
       console.log(e)

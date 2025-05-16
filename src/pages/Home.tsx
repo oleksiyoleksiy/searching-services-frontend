@@ -1,31 +1,70 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import SearchBar from '@/components/SearchBar'
 import CategoryCard from '@/components/CategoryCard'
 import ServiceCard from '@/components/ServiceCard'
 import { Button } from '@/components/ui/button'
-import { categories, serviceProviders } from '@/data/mockData'
+// import { categories, serviceProviders } from '@/data/mockData'
 import { MapPin, Search, Star, ArrowRight, Calendar } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import providerService from '@/services/providerService'
+import { Category, Company } from '@/types'
+import categoryService from '@/services/categoryService'
+import { categoryIcons } from '@/data/mockData'
 
+interface CategoryLink extends Category {
+  icon: React.ReactNode
+  color: string
+  to: string
+}
 const Home = () => {
   // const [searchQuery, setSearchQuery] = useState({ service: '', location: '' })
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
+  const [providers, setProviders] = useState<Company[]>([])
+  const [categories, setCategories] = useState<CategoryLink[]>([])
 
-  const handleSearch = (service: string, location: string) => {
+  const handleSearch = (service: string, postalCode: string) => {
     // setSearchParams({ service, location })
 
-    navigate(`/search?service=${service}&location=${location}`)
+
+
+    navigate(`/search?${service ? `service=${service}` : ''}&${postalCode ? `postalCode=${postalCode}` : ''}`)
 
     // In a real application, this would trigger an API call
   }
 
-  const featuredProviders = serviceProviders.filter(
-    provider => provider.featured
-  )
-  const popularProviders = serviceProviders.slice(0, 4)
+  const fetchProviders = async () => {
+    const response = await providerService.index('limit=4')
+
+    if (response) {
+      setProviders(response)
+    }
+  }
+
+  const fetchCategories = async () => {
+    const response = await categoryService.index('limit=10')
+
+    if (response) {
+      setCategories(response.map(c => ({
+        ...c,
+        icon: categoryIcons[c.id]?.icon,
+        color: categoryIcons[c.id]?.color,
+        to: `/category/${c.id}`
+      })))
+    }
+  }
+
+  useEffect(() => {
+    fetchProviders()
+    fetchCategories()
+  }, [])
+
+  // const featuredProviders = serviceProviders.filter(
+  //   provider => provider.featured
+  // )
+  // const popularProviders = serviceProviders.slice(0, 4)
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -78,12 +117,12 @@ const Home = () => {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-              {categories.slice(0, 10).map(category => (
+              {categories.map(category => (
                 <CategoryCard
                   key={category.id}
                   icon={category.icon}
-                  title={category.title}
-                  providerCount={category.providerCount}
+                  title={category.name}
+                  providersCount={category.providers_count}
                   color={category.color}
                   to={category.to}
                 />
@@ -99,7 +138,7 @@ const Home = () => {
         </section>
 
         {/* Featured Providers Section */}
-        <section className="py-12 bg-gray-50">
+        {/* <section className="py-12 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
@@ -116,7 +155,7 @@ const Home = () => {
 
             <div className="provider-grid">
               {featuredProviders.map(provider => (
-                <ServiceCard key={provider.id} {...provider} />
+                <ServiceCard key={provider.id} provider={provider} />
               ))}
             </div>
 
@@ -126,7 +165,7 @@ const Home = () => {
               </Button>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Popular Services Section */}
         <section className="py-12 bg-white">
@@ -145,8 +184,8 @@ const Home = () => {
             </div>
 
             <div className="provider-grid">
-              {popularProviders.map(provider => (
-                <ServiceCard key={provider.id} {...provider} />
+              {providers.map(provider => (
+                <ServiceCard key={provider.id} provider={provider} />
               ))}
             </div>
 

@@ -9,18 +9,33 @@ interface Role {
   permissions: Permission[]
 }
 
+export interface RegisterData {
+  name: string
+  email: string
+  postal_code: string
+  address: string
+  password: string
+  password_confirmation: string
+  company_name: string
+  years_of_experience: string
+  phone_number: string
+  user_type: 'client' | 'provider'
+  categories: string[]
+}
+
 export interface Company {
-  id: number
+  id: string
   name: string
   years_of_experience: string
   description: string
   categories: Category[]
   reviews_count: number
-  preview: string
+  image: string
   address: string
+  postal_code: string
   rating: number
   availability: string
-  price_from: number
+  price: string
 }
 
 export interface Category {
