@@ -14,12 +14,28 @@ import {
 } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { ProviderShow } from '@/types'
+import providerService from '@/services/providerService'
+import { set } from 'date-fns'
 
 const ProviderProfile = () => {
   const { id } = useParams<{ id: string }>()
-  const provider =
-    serviceProviders.find(p => p.id === id) || serviceProviders[0]
+  const [provider, setProvider] = useState<ProviderShow>()
 
+  const fetchProvider = async () => {
+    const response = await providerService.show(Number(id))
+
+    if (response) {
+      setProvider(response)
+    }
+  }
+
+  useEffect(() => {
+    fetchProvider()
+  }, [])
+
+  if (!provider) return null
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <main className="flex-grow">
@@ -40,8 +56,7 @@ const ProviderProfile = () => {
               <div className="md:w-2/3 md:pl-8">
                 <div className="flex flex-wrap items-start justify-between mb-2">
                   <Badge variant="outline" className="text-xs">
-                    {provider.category}
-                    {provider.subcategory && ` · ${provider.subcategory}`}
+                    {provider.categories?.map(c => c.name).join(' · ')}
                   </Badge>
 
                   <div className="flex space-x-2 mt-2 md:mt-0">
@@ -72,17 +87,17 @@ const ProviderProfile = () => {
                   <div className="flex items-center">
                     <Star className="w-5 h-5 text-yellow-400 fill-yellow-400 mr-1" />
                     <span className="font-medium">
-                      {provider.rating.toFixed(1)}
+                      {provider.rating}
                     </span>
                     <span className="text-sm text-gray-500 ml-1">
-                      ({provider.reviewCount} reviews)
+                      ({provider.reviews_count} reviews)
                     </span>
                   </div>
                   <div className="mx-3 text-gray-300">|</div>
                   <div className="flex items-center text-gray-600">
                     <MapPin className="h-4 w-4 mr-1" />
                     <span>
-                      {provider.location} · {provider.distance} away
+                      {provider.user.address}, {provider.user.postal_code}
                     </span>
                   </div>
                 </div>
@@ -90,24 +105,20 @@ const ProviderProfile = () => {
                 <div className="flex flex-wrap gap-4 mb-6">
                   <div className="flex items-center text-gray-700">
                     <Clock className="h-4 w-4 mr-2 text-gray-500" />
-                    Hours: {provider.availability}
+                    Available: {provider.availability}
                   </div>
                   <div className="flex items-center text-gray-700">
                     <Phone className="h-4 w-4 mr-2 text-gray-500" />
-                    (123) 456-7890
+                    {provider.user.phone_number}
                   </div>
                   <div className="flex items-center text-gray-700">
                     <Mail className="h-4 w-4 mr-2 text-gray-500" />
-                    contact@{provider.name.toLowerCase().replace(/\s+/g, '')}
-                    .com
+                    {provider.user.email}
                   </div>
                 </div>
 
                 <p className="text-gray-600 mb-6">
-                  {provider.name} is a highly rated service provider
-                  specializing in {provider.subcategory || provider.category}.
-                  With years of experience and a commitment to quality, we
-                  provide exceptional service to all our clients.
+                  {provider.description}
                 </p>
 
                 <Button
@@ -135,29 +146,20 @@ const ProviderProfile = () => {
               <h2 className="text-xl font-semibold mb-4">Services Offered</h2>
 
               <div className="space-y-4">
-                {[...Array(3)].map((_, i) => (
+                {provider.services?.map((item, i) => (
                   <div
                     key={i}
                     className="flex justify-between items-center p-4 border rounded-md hover:bg-gray-50 transition-colors"
                   >
                     <div>
                       <h3 className="font-medium">
-                        {provider.subcategory || provider.category} - Package{' '}
-                        {i + 1}
+                        {item.name}
                       </h3>
                       <p className="text-sm text-gray-600 mt-1">
-                        Our{' '}
-                        {i === 0 ? 'basic' : i === 1 ? 'standard' : 'premium'}{' '}
-                        service package. Includes all{' '}
-                        {i === 0
-                          ? 'essential'
-                          : i === 1
-                          ? 'standard'
-                          : 'premium'}{' '}
-                        features.
+                        {item.description}
                       </p>
                       <div className="mt-2 text-localfind-700 font-medium">
-                        ${30 + i * 20}+
+                        ${item.price}+
                       </div>
                     </div>
                     <div>
@@ -184,44 +186,35 @@ const ProviderProfile = () => {
               </div>
 
               <div className="space-y-6">
-                {[...Array(3)].map((_, i) => (
+                {provider.reviews?.map((item, i) => (
                   <div key={i} className="border-b pb-6 last:border-b-0">
                     <div className="flex justify-between mb-2">
-                      <div className="flex items-center">
-                        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
-                          <span className="font-medium text-gray-600">
-                            {['JD', 'AM', 'BT'][i]}
-                          </span>
-                        </div>
+                      <div className="flex items-center gap-2">
+                        <img src={item.user.avatar} alt={item.user.name} className="w-10 h-10 rounded-full object-center object-cover bg-gray-200" />
                         <div>
                           <div className="font-medium">
-                            {['John Doe', 'Alice Miller', 'Bob Thomas'][i]}
+                            {item.user.name}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {['2 weeks ago', '1 month ago', '3 months ago'][i]}
+                            {item.created_at}
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center">
-                        {[...Array(5)].map((_, starIndex) => (
+                        {[...Array(5)]?.map((_, starIndex) => (
                           <Star
                             key={starIndex}
-                            className={`w-4 h-4 ${
-                              starIndex < 5 - i
-                                ? 'text-yellow-400 fill-yellow-400'
-                                : 'text-gray-300'
-                            }`}
+                            className={`w-4 h-4 ${item.rating > starIndex
+                              ? 'text-yellow-400 fill-yellow-400'
+                              : 'text-gray-300'
+                              }`}
                           />
                         ))}
                       </div>
                     </div>
                     <p className="text-gray-600">
                       {
-                        [
-                          'Great service! Very professional and on time. Would definitely recommend.',
-                          'Good experience overall. Service was as described and reasonably priced.',
-                          'Satisfactory service. Took a bit longer than expected but quality was good.',
-                        ][i]
+                        item.content
                       }
                     </p>
                   </div>
@@ -237,13 +230,13 @@ const ProviderProfile = () => {
               <h2 className="text-xl font-semibold mb-4">Photo Gallery</h2>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {[...Array(6)].map((_, i) => (
+                {provider.gallery?.map((image, i) => (
                   <div
                     key={i}
                     className="aspect-square rounded-md overflow-hidden cursor-pointer"
                   >
                     <img
-                      src={provider.image}
+                      src={image}
                       alt={`Gallery image ${i + 1}`}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
@@ -259,23 +252,7 @@ const ProviderProfile = () => {
 
               <div className="space-y-4 text-gray-700">
                 <p>
-                  {provider.name} is a leading provider of{' '}
-                  {provider.subcategory || provider.category} services in{' '}
-                  {provider.location}. Established in 2015, we've built a
-                  reputation for excellence, reliability, and customer
-                  satisfaction.
-                </p>
-                <p>
-                  Our team consists of highly trained professionals with years
-                  of experience in the field. We pride ourselves on using the
-                  latest techniques and high-quality materials to deliver
-                  outstanding results.
-                </p>
-                <p>
-                  Whether you're looking for a quick service or a comprehensive
-                  solution, we're here to help. Contact us today to learn more
-                  about how we can assist you with your{' '}
-                  {provider.subcategory || provider.category} needs.
+                  {provider.description}
                 </p>
               </div>
 
@@ -283,23 +260,11 @@ const ProviderProfile = () => {
                 Business Hours
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {[
-                  'Monday',
-                  'Tuesday',
-                  'Wednesday',
-                  'Thursday',
-                  'Friday',
-                  'Saturday',
-                  'Sunday',
-                ].map((day, i) => (
-                  <div key={day} className="flex justify-between py-1 border-b">
-                    <span>{day}</span>
+                {provider.availabilities?.map((availability, i) => (
+                  <div key={availability.day} className="flex justify-between py-1 border-b">
+                    <span>{availability.day}</span>
                     <span className="font-medium">
-                      {i < 5
-                        ? '9:00 AM - 6:00 PM'
-                        : i === 5
-                        ? '10:00 AM - 4:00 PM'
-                        : 'Closed'}
+                      {availability.start}AM - {availability.end}PM
                     </span>
                   </div>
                 ))}

@@ -136,6 +136,7 @@ const CategoryPage = () => {
                 {providers?.length > 0 ? (
                   providers?.map(provider => (
                     <ServiceCard
+                      key={provider.name}
                       provider={provider}
                     />
                   ))

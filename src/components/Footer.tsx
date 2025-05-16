@@ -61,30 +61,6 @@ const Footer = () => {
                   Find Services
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="#"
-                  className="text-gray-600 hover:text-localfind-600 transition-colors"
-                >
-                  How it Works
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="#"
-                  className="text-gray-600 hover:text-localfind-600 transition-colors"
-                >
-                  Customer Support
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="#"
-                  className="text-gray-600 hover:text-localfind-600 transition-colors"
-                >
-                  Safety Center
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -99,30 +75,6 @@ const Footer = () => {
                   className="text-gray-600 hover:text-localfind-600 transition-colors"
                 >
                   Join as Provider
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="#"
-                  className="text-gray-600 hover:text-localfind-600 transition-colors"
-                >
-                  Business Resources
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="#"
-                  className="text-gray-600 hover:text-localfind-600 transition-colors"
-                >
-                  Success Stories
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="#"
-                  className="text-gray-600 hover:text-localfind-600 transition-colors"
-                >
-                  Provider Support
                 </Link>
               </li>
             </ul>
@@ -143,26 +95,10 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/categories"
                   className="text-gray-600 hover:text-localfind-600 transition-colors"
                 >
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="#"
-                  className="text-gray-600 hover:text-localfind-600 transition-colors"
-                >
-                  Press
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="#"
-                  className="text-gray-600 hover:text-localfind-600 transition-colors"
-                >
-                  Contact
+                  Categories
                 </Link>
               </li>
             </ul>
@@ -185,12 +121,6 @@ const Footer = () => {
               className="text-gray-600 hover:text-localfind-600 text-sm transition-colors"
             >
               Terms of Service
-            </Link>
-            <Link
-              to="#"
-              className="text-gray-600 hover:text-localfind-600 text-sm transition-colors"
-            >
-              Sitemap
             </Link>
           </div>
         </div>

@@ -48,6 +48,37 @@ export interface Service {
   id: number
   name: string
   price: number
+  description: string
+  created_at: string
+}
+
+interface Availability {
+  day: string,
+  start: string,
+  end: string,
+}
+
+export interface ProviderShow {
+  id: number
+  name: string
+  image: string
+  description: string
+  user: User
+  rating: number
+  reviews_count: number
+  services: Service[]
+  reviews: Review[]
+  gallery: string[]
+  categories: Category[]
+  availability: string
+  availabilities: Availability[]
+}
+
+export interface Review {
+  id: number
+  user: User
+  rating: number
+  content: string
   created_at: string
 }
 
@@ -63,6 +94,7 @@ export interface User {
   phone_number: string
   created_at: string
   company: Company | null
+  postal_code: string
 }
 
 export interface ApplicationData {

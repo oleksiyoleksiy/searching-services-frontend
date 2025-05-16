@@ -38,12 +38,6 @@ const Header = () => {
             Categories
           </Link>
           <Link
-            to="/map"
-            className="text-gray-600 hover:text-localfind-600 transition-colors"
-          >
-            Map
-          </Link>
-          <Link
             to="/about"
             className="text-gray-600 hover:text-localfind-600 transition-colors"
           >
