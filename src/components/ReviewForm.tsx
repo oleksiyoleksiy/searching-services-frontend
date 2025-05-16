@@ -3,40 +3,81 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Star } from 'lucide-react';
 import { toast } from 'sonner';
+import reviewService from '@/services/reviewService';
+import { ca } from 'date-fns/locale';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { providerActions } from '@/store/providerSlice';
 
-const ReviewForm = () => {
-  const [rating, setRating] = useState(0);
-  const [review, setReview] = useState('');
+interface Errors {
+  rating?: string[]
+  content?: string[]
+}
+
+interface Props {
+  onOpenChange: (open: boolean) => void;
+}
+
+const ReviewForm = ({ onOpenChange }: Props) => {
+  const [formData, setFormData] = useState({
+    rating: 0,
+    content: ''
+  })
   const [hoveredRating, setHoveredRating] = useState(0);
+  const [errors, setErrors] = useState<Errors>({});
+  const { provider } = useSelector((state: RootState) => state.provider)
+  const dispatch = useDispatch()
 
   const handleStarClick = (selectedRating: number) => {
-    setRating(selectedRating);
+    setFormData(prev => ({ ...prev, rating: selectedRating }));
   };
 
   const handleStarHover = (hoveredRating: number) => {
     setHoveredRating(hoveredRating);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (rating === 0) {
+    if (formData.rating === 0) {
       toast.error("Please select a rating before submitting");
       return;
     }
 
-    if (review.trim() === '') {
+    if (formData.content.trim() === '') {
       toast.error("Please enter your review");
       return;
     }
 
-    // This would normally send the review to a backend API
-    toast.success("Your review has been submitted!");
+    try {
+      const response = await reviewService.store(Number(provider?.id), formData)
 
-    // Reset form
-    setRating(0);
-    setReview('');
+      if (response) {
+        dispatch(providerActions.setProvider(response))
+
+        toast.success("Your review has been submitted!");
+
+        setFormData({
+          rating: 0,
+          content: ''
+        })
+
+        onOpenChange(false);
+      }
+    } catch (e: any) {
+      setErrors(e.response?.data?.errors);
+    }
   };
+
+  const renderErrors = (errors?: string[]) => {
+    return errors && <div className="flex flex-col gap-1">
+      {errors.map(error => (
+        <div key={error} className="text-red-500 text-sm">
+          {error}
+        </div>
+      ))}
+    </div>
+  }
 
   return (
     <div className="bg-gray-50 rounded-lg p-4">
@@ -57,24 +98,26 @@ const ReviewForm = () => {
                   onMouseLeave={() => handleStarHover(0)}
                 >
                   <Star
-                    className={`w-6 h-6 ${star <= (hoveredRating || rating)
-                        ? 'text-yellow-400 fill-yellow-400'
-                        : 'text-gray-300'
+                    className={`w-6 h-6 ${star <= (hoveredRating || formData.rating)
+                      ? 'text-yellow-400 fill-yellow-400'
+                      : 'text-gray-300'
                       }`}
                   />
                 </button>
               ))}
             </div>
+            {renderErrors(errors?.rating)}
           </div>
         </div>
 
         <div className="mb-4">
           <Textarea
             placeholder="Write your review here... What did you like or dislike about this service?"
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
+            value={formData.content}
+            onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
             className="min-h-[120px]"
           />
+          {renderErrors(errors?.content)}
         </div>
 
         <div className="flex justify-end">

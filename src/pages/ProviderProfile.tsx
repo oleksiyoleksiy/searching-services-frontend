@@ -15,25 +15,29 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { ProviderShow } from '@/types'
 import providerService from '@/services/providerService'
-import { set } from 'date-fns'
 import BookingModal from '@/components/BookingModal'
 import ReviewModal from '@/components/ReviewModal'
 import SignInModal from '@/components/SignInModal'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store'
+import { providerActions } from '@/store/providerSlice'
 
 const ProviderProfile = () => {
   const { id } = useParams<{ id: string }>()
-  const [provider, setProvider] = useState<ProviderShow>()
   const { user } = useSelector((s: RootState) => s.auth)
+  const { provider } = useSelector((s: RootState) => s.provider)
+  const dispatch = useDispatch()
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [signInModalOpen, setSignInModalOpen] = useState(false);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | undefined>(undefined);
 
   const fetchProvider = async () => {
     const response = await providerService.show(Number(id))
-
+    
     if (response) {
-      setProvider(response)
+      dispatch(providerActions.setProvider(response))
     }
   }
 
@@ -41,10 +45,6 @@ const ProviderProfile = () => {
     fetchProvider()
   }, [])
 
-  const [bookingModalOpen, setBookingModalOpen] = useState(false);
-  const [reviewModalOpen, setReviewModalOpen] = useState(false);
-  const [signInModalOpen, setSignInModalOpen] = useState(false);
-  const [selectedServiceId, setSelectedServiceId] = useState<string | undefined>(undefined);
 
   const handleBookAppointment = () => {
     if (!user) {
@@ -65,13 +65,12 @@ const ProviderProfile = () => {
     setSelectedServiceId(serviceId);
     setBookingModalOpen(true);
   };
-
+  
   if (!provider) return null
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <main className="flex-grow">
-        {/* Provider Header */}
         <div className="bg-white border-b">
           <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col md:flex-row">
@@ -257,10 +256,6 @@ const ProviderProfile = () => {
                   </div>
                 ))}
               </div>
-
-              <div className="mt-6 text-center">
-                <Button variant="outline">Load More Reviews</Button>
-              </div>
             </TabsContent>
 
             <TabsContent value="gallery" className="bg-white rounded-lg p-6">
@@ -347,7 +342,6 @@ const ProviderProfile = () => {
       <ReviewModal
         open={reviewModalOpen}
         onOpenChange={setReviewModalOpen}
-        providerId={String(provider.id)}
         providerName={provider.name}
       />
     </div>
