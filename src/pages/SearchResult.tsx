@@ -19,8 +19,17 @@ const SearchResults = () => {
   const [providers, setProviders] = useState<Company[]>([])
 
   const handleSearch = (search: string, postalCode: string) => {
-    setSearchParams({ search, postalCode })
-    // In a real app, this would fetch results from an API
+    const selectedSearchParams = new URLSearchParams()
+
+    if (search) {
+      selectedSearchParams.set('search', search)
+    }
+
+    if (postalCode) {
+      selectedSearchParams.set('postalCode', postalCode)
+    }
+
+    setSearchParams(selectedSearchParams)
   }
 
   const fetchProviders = async () => {
@@ -45,7 +54,7 @@ const SearchResults = () => {
               simplified={true}
               initialValues={{
                 search: searchParams.get('search') || '',
-                postal_code: searchParams.get('postal_code') || '',
+                postalCode: searchParams.get('postalCode') || '',
               }}
             />
           </div>
@@ -57,7 +66,7 @@ const SearchResults = () => {
               <div>
                 <h1 className="text-xl font-semibold">
                   {searchParams.get('search')} in{' '}
-                  {searchParams.get('postal_code')}
+                  {searchParams.get('postalCode')}
                 </h1>
                 <p className="text-gray-500 text-sm">
                   {serviceProviders.length} service providers found

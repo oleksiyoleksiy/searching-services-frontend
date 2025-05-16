@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Search, MapPin, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useSearchParams } from 'react-router-dom'
 
 interface SearchBarInitialValues {
   search: string
-  postal_code: string
+  postalCode: string
 }
 
 interface SearchBarProps {
@@ -19,11 +20,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
   simplified = false,
   initialValues = {
     search: '',
-    postal_code: '',
+    postalCode: '',
   },
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [search, setSearch] = useState(initialValues.search)
-  const [postalCode, setPostalCode] = useState(initialValues.postal_code)
+  const [postalCode, setPostalCode] = useState(initialValues.postalCode)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,6 +33,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
       onSearch(search, postalCode)
     }
   }
+
+  // useEffect(() => {
+  //   setSearch(searchParams.has('search') ? String(searchParams.get('search')) : '')
+  //   setPostalCode(searchParams.has('postalCode') ? String(searchParams.get('postalCode')) : '')
+  // }, [initialValues])
 
   return (
     <form

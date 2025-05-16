@@ -25,12 +25,12 @@ const Home = () => {
   const [providers, setProviders] = useState<Company[]>([])
   const [categories, setCategories] = useState<CategoryLink[]>([])
 
-  const handleSearch = (service: string, postalCode: string) => {
+  const handleSearch = (search: string, postalCode: string) => {
     // setSearchParams({ service, location })
 
 
 
-    navigate(`/search?${service ? `service=${service}` : ''}&${postalCode ? `postalCode=${postalCode}` : ''}`)
+    navigate(`/search?${search ? `search=${search}` : ''}&${postalCode ? `postalCode=${postalCode}` : ''}`)
 
     // In a real application, this would trigger an API call
   }

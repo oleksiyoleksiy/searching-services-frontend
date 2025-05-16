@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Search, Menu, X, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import { hasPermission } from '@/utils/permissions'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import SearchBar from '@/components/SearchBar'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user, isLoading } = useSelector((s: RootState) => s.auth)
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
+  const navigate = useNavigate()
 
   if (isLoading) return null
 
@@ -46,7 +50,12 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex items-center space-x-3">
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchModalOpen(true)}
+            aria-label="Search"
+          >
             <Search className="h-5 w-5" />
           </Button>
           {user && <Link to={hasPermission('admin', user) ? '/admin/dashboard' : hasPermission('provider', user) ? '/provider/dashboard' : '/user/dashboard'}>
@@ -134,6 +143,20 @@ const Header = () => {
           </div>
         </div>
       )}
+
+      <Dialog open={searchModalOpen} onOpenChange={setSearchModalOpen}>
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="text-center">Search LocalFind</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <SearchBar simplified={true} onSearch={(search, postalCode) => {
+              setSearchModalOpen(false);
+              navigate(`/search?${search ? `search=${search}` : ''}&${postalCode ? `postalCode=${postalCode}` : ''}`)
+            }} />
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   )
 }

@@ -33,13 +33,17 @@ const CategoryPage = () => {
   const [providers, setProviders] = useState<Company[]>([])
 
   const handleSearch = (search: string, postalCode: string) => {
-    if (search !== '') {
-      setSearchParams({ search })
-    }
-    if (postalCode !== '') {
-      setSearchParams({ postalCode })
+    const selectedSearchParams = new URLSearchParams()
 
+    if (search) {
+      selectedSearchParams.set('search', search)
     }
+
+    if (postalCode) {
+      selectedSearchParams.set('postalCode', postalCode)
+    }
+
+    setSearchParams(selectedSearchParams)
   }
 
 
