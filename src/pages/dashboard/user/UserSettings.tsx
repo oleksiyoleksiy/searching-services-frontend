@@ -107,7 +107,7 @@ const UserSettings = () => {
 
     } catch (e: any) {
       console.log(e);
-      
+
       setErrors(e.response?.data?.errors)
     }
 
@@ -131,11 +131,7 @@ const UserSettings = () => {
       </div>
 
       <Tabs defaultValue="profile">
-        <TabsList className="mb-4">
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          {/* <TabsTrigger value="preferences">Preferences</TabsTrigger> */}
-        </TabsList>
+
 
         <TabsContent value="profile" className="space-y-6 pt-6">
           <Card>
@@ -213,86 +209,10 @@ const UserSettings = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="security">
-          <Card>
-            <CardHeader>
-              <CardTitle>Password</CardTitle>
-              <CardDescription>Change your password</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="current-password">Current Password</Label>
-                <Input id="current-password" type="password" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="new-password">New Password</Label>
-                <Input id="new-password" type="password" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm New Password</Label>
-                <Input id="confirm-password" type="password" />
-              </div>
-              <Button className="mt-4">Update Password</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
-        {/* <TabsContent value="preferences">
-          <Card>
-            <CardHeader>
-              <CardTitle>Language</CardTitle>
-              <CardDescription>Choose your preferred language</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Select value={profileData.language} onValueChange={handleLanguageChange}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Language" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="uk">Українська</SelectItem>
-                </SelectContent>
-              </Select>
-            </CardContent>
-          </Card>
-
-
-        </TabsContent> */}
       </Tabs>
 
-      <Card className="border-red-200">
-        <CardHeader>
-          <CardTitle className="text-red-600">Danger Zone</CardTitle>
-          <CardDescription>Irreversible account actions</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
-                Delete Account
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone. This will permanently delete your account and remove your data from our servers.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="py-4">
-                <p className="text-sm text-gray-500">
-                  Please type "delete my account" below to confirm:
-                </p>
-                <Input className="mt-2" placeholder="delete my account" />
-              </div>
-              <DialogFooter>
-                <Button variant="outline">Cancel</Button>
-                <Button variant="destructive">Delete Account</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </CardContent>
-      </Card>
+
     </div>
   );
 };

@@ -5,61 +5,27 @@ import { BookOpen, Calendar, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import bookingService from "@/services/bookingService";
+import { useEffect, useState } from "react";
+import { Booking } from "@/types";
 
-// Mock user data
-
-
-// Mock upcoming bookings data
-const upcomingBookings = [
-  {
-    id: "1",
-    serviceName: "Home Cleaning",
-    providerName: "CleanPro Services",
-    date: "June 10, 2025",
-    time: "10:00 AM",
-    status: "upcoming"
-  },
-  {
-    id: "2",
-    serviceName: "Plumbing Repair",
-    providerName: "Quick Fix Plumbing",
-    date: "June 15, 2025",
-    time: "2:00 PM",
-    status: "upcoming"
-  }
-];
-
-// Mock suggested services
-const suggestedServices = [
-  {
-    id: "1",
-    name: "Gardening Services",
-    provider: "Green Thumb",
-    image: "/placeholder.svg",
-    rating: 4.8,
-    price: "$45/hour"
-  },
-  {
-    id: "2",
-    name: "Electrical Repair",
-    provider: "Power Solutions",
-    image: "/placeholder.svg",
-    rating: 4.6,
-    price: "$60/hour"
-  },
-  {
-    id: "3",
-    name: "House Painting",
-    provider: "Color Masters",
-    image: "/placeholder.svg",
-    rating: 4.9,
-    price: "$40/hour"
-  }
-];
 
 const UserHome = () => {
   const navigate = useNavigate();
   const { user } = useSelector((s: RootState) => s.auth)
+  const [upcomingBookings, setUpcomingBookings] = useState<Booking[]>([])
+
+  const fetchBookings = async () => {
+    const response = await bookingService.index('limit=2&status=upcoming')
+
+    if (response) {
+      setUpcomingBookings(response)
+    }
+  }
+
+  useEffect(() => {
+    fetchBookings()
+  }, [])
 
   return (
     <div className="space-y-8">
@@ -72,12 +38,10 @@ const UserHome = () => {
           </div>
           <Avatar className="h-14 w-14">
             <AvatarImage className="object-cover object-center" src={user?.avatar} alt={user?.name} />
-            {/* <AvatarFallback>{user?.avatar}</AvatarFallback> */}
           </Avatar>
         </div>
       </section>
 
-      {/* Profile Information */}
       <section className="bg-white p-6 rounded-lg shadow-sm">
         <h3 className="text-xl font-semibold text-gray-800 mb-4">Profile Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -96,7 +60,6 @@ const UserHome = () => {
         </div>
       </section>
 
-      {/* Upcoming Bookings */}
       <section>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-gray-800">Upcoming Bookings</h3>
@@ -108,59 +71,18 @@ const UserHome = () => {
           {upcomingBookings.map((booking) => (
             <Card key={booking.id}>
               <CardHeader className="pb-2">
-                <CardTitle>{booking.serviceName}</CardTitle>
-                <CardDescription>{booking.providerName}</CardDescription>
+                <CardTitle>{booking.service}</CardTitle>
+                <CardDescription>{booking.provider}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="h-4 w-4 text-localfind-600" />
-                  <span>{booking.date} at {booking.time}</span>
+                  <span>{booking.date} at {booking.start_time}</span>
                 </div>
               </CardContent>
               <CardFooter className="pt-1">
                 <Button variant="outline" className="w-full">
                   View Details
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Suggested Services */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-semibold text-gray-800">Suggested For You</h3>
-          <Button variant="ghost" onClick={() => navigate("/search")} className="text-sm">
-            Browse All Services
-          </Button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {suggestedServices.map((service) => (
-            <Card key={service.id} className="overflow-hidden">
-              <div className="h-40 bg-gray-200">
-                <img
-                  src={service.image}
-                  alt={service.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <CardHeader className="pb-2">
-                <CardTitle>{service.name}</CardTitle>
-                <CardDescription>{service.provider}</CardDescription>
-              </CardHeader>
-              <CardContent className="pb-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm">{service.rating}</span>
-                  </div>
-                  <span className="font-medium">{service.price}</span>
-                </div>
-              </CardContent>
-              <CardFooter className="pt-0">
-                <Button className="w-full">
-                  Book Now
                 </Button>
               </CardFooter>
             </Card>

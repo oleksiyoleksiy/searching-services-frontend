@@ -1,65 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Calendar, Clock } from "lucide-react";
+import { Booking, BookingStatus } from "@/types";
+import bookingService from "@/services/bookingService";
 
-const bookings = [
+interface Status {
+  status: BookingStatus;
+  label: string;
+}
+
+const statuses: Status[] = [
   {
-    id: "1",
-    serviceName: "Home Cleaning",
-    providerName: "CleanPro Services",
-    date: "June 10, 2025",
-    time: "10:00 AM",
+    status: "pending",
+    label: "Pending"
+  },
+  {
+    status: "cancelled",
+    label: "Cancelled"
+  },
+  {
     status: "upcoming",
-    price: "$120"
+    label: "Upcoming"
   },
   {
-    id: "2",
-    serviceName: "Plumbing Repair",
-    providerName: "Quick Fix Plumbing",
-    date: "June 15, 2025",
-    time: "2:00 PM",
-    status: "upcoming",
-    price: "$85"
+    status: "rejected",
+    label: "Rejected"
   },
   {
-    id: "3",
-    serviceName: "Lawn Mowing",
-    providerName: "Green Gardens",
-    date: "May 28, 2025",
-    time: "9:00 AM",
+    status: "no_show",
+    label: "No Show"
+  },
+  {
     status: "completed",
-    price: "$60"
-  },
-  {
-    id: "4",
-    serviceName: "Electrical Inspection",
-    providerName: "Safe Power",
-    date: "May 5, 2025",
-    time: "11:00 AM",
-    status: "completed",
-    price: "$95"
-  },
-  {
-    id: "5",
-    serviceName: "Roof Repair",
-    providerName: "Top Roofing",
-    date: "April 20, 2025",
-    time: "3:00 PM",
-    status: "canceled",
-    price: "$250"
+    label: "Completed"
   }
 ];
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: BookingStatus) => {
   switch (status) {
     case "upcoming":
       return "bg-blue-100 text-blue-800";
     case "completed":
       return "bg-green-100 text-green-800";
-    case "canceled":
+    case "cancelled":
       return "bg-red-100 text-red-800";
     default:
       return "bg-gray-100 text-gray-800";
@@ -68,10 +54,35 @@ const getStatusColor = (status: string) => {
 
 const BookingHistory = () => {
   const [activeFilter, setActiveFilter] = useState("all");
+  const [bookings, setBookings] = useState<Booking[]>([]);
 
   const filteredBookings = activeFilter === "all"
     ? bookings
     : bookings.filter(booking => booking.status === activeFilter);
+
+  const fetchBookings = async () => {
+    const response = await bookingService.index()
+
+    if (response) {
+      setBookings(response)
+    }
+  }
+
+  const getStatusLabel = (status: BookingStatus) => {
+    return statuses.find(s => s.status === status)?.label || "Unknown";
+  }
+
+  const handleCancelButtonClick = async (id: number) => {
+    const response = await bookingService.cancel(id)
+
+    if (response) {
+      setBookings(prev => prev.map(booking => booking.id === id ? { ...booking, status: "cancelled" } : booking))
+    }
+  }
+
+  useEffect(() => {
+    fetchBookings()
+  }, [])
 
   return (
     <div className="space-y-6">
@@ -83,9 +94,9 @@ const BookingHistory = () => {
       <Tabs defaultValue="all" onValueChange={setActiveFilter}>
         <TabsList className="mb-4">
           <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-          <TabsTrigger value="completed">Completed</TabsTrigger>
-          <TabsTrigger value="canceled">Canceled</TabsTrigger>
+          {statuses.map(status => (
+            <TabsTrigger value={status.status} key={status.status}>{status.label}</TabsTrigger>
+          ))}
         </TabsList>
 
         <TabsContent value={activeFilter} className="mt-0">
@@ -109,25 +120,24 @@ const BookingHistory = () => {
                   <TableBody>
                     {filteredBookings.map((booking) => (
                       <TableRow key={booking.id}>
-                        <TableCell className="font-medium">{booking.serviceName}</TableCell>
-                        <TableCell>{booking.providerName}</TableCell>
+                        <TableCell className="font-medium">{booking.service}</TableCell>
+                        <TableCell>{booking.provider}</TableCell>
                         <TableCell className="flex items-center gap-2">
                           <Calendar className="h-4 w-4 text-localfind-600" />
                           {booking.date}
                           <Clock className="h-4 w-4 text-localfind-600 ml-2" />
-                          {booking.time}
+                          {booking.start_time}
                         </TableCell>
                         <TableCell>{booking.price}</TableCell>
                         <TableCell>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
-                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                            {getStatusLabel(booking.status)}
                           </span>
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-2">
-                            <Button variant="outline" size="sm">View</Button>
                             {booking.status === "upcoming" && (
-                              <Button variant="outline" size="sm" className="text-red-500 border-red-200 hover:bg-red-50">Cancel</Button>
+                              <Button onClick={() => handleCancelButtonClick(booking.id)} variant="outline" size="sm" className="text-red-500 border-red-200 hover:bg-red-50">Cancel</Button>
                             )}
                           </div>
                         </TableCell>

@@ -113,6 +113,18 @@ export interface ProviderProfileData {
   description: string
 }
 
+export type BookingStatus = 'pending' | 'cancelled' | 'upcoming' | 'rejected' | 'no_show' | 'completed'
+
+export interface Booking {
+  id: number
+  date: string
+  start_time: string
+  service: string
+  provider: string
+  status: BookingStatus
+  price: string
+} 
+
 export interface ApplicationData {
   name: string
   phone: string
