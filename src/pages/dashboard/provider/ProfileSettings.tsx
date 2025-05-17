@@ -17,6 +17,7 @@ import { Category, ProviderProfileData } from '@/types';
 import categoryService from '@/services/categoryService';
 import { MultiSelect } from '@/components/ui/multi-select';
 import providerService from '@/services/providerService';
+import providerProviderService from '@/services/provider/providerProviderService';
 
 interface Errors {
   name?: string[]
@@ -120,7 +121,7 @@ const ProfileSettings = () => {
     try {
       setIsSubmitting(true)
 
-      const response = await providerService.update(profileData).finally(() => setIsSubmitting(false))
+      const response = await providerProviderService.update(profileData).finally(() => setIsSubmitting(false))
 
       if (response) {
         dispatch(authActions.setUser(response))
