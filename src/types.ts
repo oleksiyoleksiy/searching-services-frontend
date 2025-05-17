@@ -53,7 +53,7 @@ export interface Service {
 }
 
 export interface Availability {
-  day: string,
+  weekday: string,
   start: string,
   end: string,
 }
@@ -72,6 +72,7 @@ export interface ProviderShow {
   categories: Category[]
   availability: string
   availabilities: Availability[]
+  is_favorite: boolean
 }
 
 export interface Review {

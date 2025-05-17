@@ -22,6 +22,7 @@ import SignInModal from '@/components/SignInModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import { providerActions } from '@/store/providerSlice'
+import favoriteService from '@/services/favoriteService'
 
 const ProviderProfile = () => {
   const { id } = useParams<{ id: string }>()
@@ -35,7 +36,7 @@ const ProviderProfile = () => {
 
   const fetchProvider = async () => {
     const response = await providerService.show(Number(id))
-    
+
     if (response) {
       dispatch(providerActions.setProvider(response))
     }
@@ -65,7 +66,25 @@ const ProviderProfile = () => {
     setSelectedServiceId(serviceId);
     setBookingModalOpen(true);
   };
-  
+
+  const handleSaveButtonClick = async () => {
+    if (!user) {
+      setSignInModalOpen(true);
+      return;
+    }
+
+    try {
+      const response = await favoriteService.store(Number(id))
+
+      if (response) {
+        dispatch(providerActions.setProvider({ ...provider!, is_favorite: !provider?.is_favorite }))
+      }
+    } catch (e: any) {
+
+    }
+
+  }
+
   if (!provider) return null
 
   return (
@@ -95,8 +114,9 @@ const ProviderProfile = () => {
                       variant="outline"
                       size="sm"
                       className="text-gray-600"
+                      onClick={handleSaveButtonClick}
                     >
-                      <Heart className="h-4 w-4 mr-1" />
+                      {provider.is_favorite ? <Heart className="stroke-none h-4 w-4 mr-1 fill-red-500" /> : <Heart className="h-4 w-4 mr-1" />}
                       Save
                     </Button>
                     <Button
@@ -293,10 +313,10 @@ const ProviderProfile = () => {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {provider.availabilities?.map((availability, i) => (
-                  <div key={availability.day} className="flex justify-between py-1 border-b">
-                    <span>{availability.day}</span>
+                  <div key={availability.weekday} className="flex justify-between py-1 border-b">
+                    <span>{availability.weekday}</span>
                     <span className="font-medium">
-                      {availability.start}AM - {availability.end}PM
+                      {availability.start} - {availability.end}
                     </span>
                   </div>
                 ))}

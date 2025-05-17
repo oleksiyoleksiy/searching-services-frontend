@@ -106,6 +106,8 @@ const UserSettings = () => {
       }
 
     } catch (e: any) {
+      console.log(e);
+      
       setErrors(e.response?.data?.errors)
     }
 

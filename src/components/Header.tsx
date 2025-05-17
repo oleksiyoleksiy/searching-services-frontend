@@ -58,12 +58,11 @@ const Header = () => {
           >
             <Search className="h-5 w-5" />
           </Button>
-          {user && <Link to={hasPermission('admin', user) ? '/admin/dashboard' : hasPermission('provider', user) ? '/provider/dashboard' : '/user/dashboard'}>
+          {user ? <Link to={hasPermission('admin', user) ? '/admin/dashboard' : hasPermission('provider', user) ? '/provider/dashboard' : '/user/dashboard'}>
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button>
-          </Link>}
-          {!user && <Link to="/auth/login">
+          </Link> : <Link to="/auth/login">
             <Button
               variant="default"
               className="bg-localfind-600 hover:bg-localfind-700"
@@ -106,13 +105,7 @@ const Header = () => {
             >
               Categories
             </Link>
-            <Link
-              to="/map"
-              className="block py-2 text-gray-600 hover:text-localfind-600"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Map
-            </Link>
+
             <Link
               to="/about"
               className="block py-2 text-gray-600 hover:text-localfind-600"
@@ -120,26 +113,32 @@ const Header = () => {
             >
               About
             </Link>
-            <div className="pt-2 flex space-x-2">
-              <Link to="/auth/register" className="w-full">
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Sign up
-                </Button>
-              </Link>
-              <Link to="/auth/login" className="w-full">
-                <Button
-                  variant="default"
-                  className="w-full bg-localfind-600 hover:bg-localfind-700"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Log in
-                </Button>
-              </Link>
-            </div>
+            {user ? <Link to={hasPermission('admin', user) ? '/admin/dashboard' : hasPermission('provider', user) ? '/provider/dashboard' : '/user/dashboard'}>
+              <Button variant="ghost" size="icon">
+                <User className="h-5 w-5" />
+              </Button>
+            </Link> :
+              <div className="pt-2 flex space-x-2">
+                <Link to="/auth/register" className="w-full">
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign up
+                  </Button>
+                </Link>
+                <Link to="/auth/login" className="w-full">
+                  <Button
+                    variant="default"
+                    className="w-full bg-localfind-600 hover:bg-localfind-700"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Log in
+                  </Button>
+                </Link>
+              </div>
+            }
           </div>
         </div>
       )}
