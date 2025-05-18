@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,90 +11,68 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ServiceErrors } from "@/types";
 
-// Mock categories for the form
-const categories = [
-  "Cleaning",
-  "Gardening",
-  "Plumbing",
-  "Electrical",
-  "Carpentry",
-  "Personal Training",
-  "Pet Care",
-  "Beauty & Wellness",
-  "IT & Technology",
-];
 
 interface ServiceFormProps {
-  initialData?: any;
-  onSubmit: (data: any) => void;
-  onCancel: () => void;
+  initialData?: any
+  onSubmit: (data: any) => void
+  onCancel: () => void
+  initialErrors?: ServiceErrors
 }
 
-const ServiceForm = ({ initialData, onSubmit, onCancel }: ServiceFormProps) => {
+const ServiceForm = ({ initialData, onSubmit, onCancel, initialErrors }: ServiceFormProps) => {
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
-    category: initialData?.category || "",
     price: initialData?.price || "",
     description: initialData?.description || "",
-    location: initialData?.location || "",
-    duration: initialData?.duration || "",
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<ServiceErrors>({});
 
-  const handleChange = (field: string, value: string) => {
-    setFormData({ ...formData, [field]: value });
-    // Clear error when user types
-    if (errors[field]) {
-      setErrors({ ...errors, [field]: "" });
-    }
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+
+    setFormData({ ...formData, [name]: value });
   };
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Service name is required";
+  useEffect(() => {
+    if (initialErrors) {
+      setErrors(initialErrors)
     }
-
-    if (!formData.category) {
-      newErrors.category = "Category is required";
-    }
-
-    if (!formData.price.trim()) {
-      newErrors.price = "Price is required";
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = "Description is required";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  }, [initialErrors])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      onSubmit(formData);
-    }
+    onSubmit(formData);
   };
+
+  const renderErrors = (errors?: string[]) => {
+    return errors && <div className="flex flex-col gap-1">
+      {errors.map(error => (
+        <div key={error} className="text-red-500 text-sm">
+          {error}
+        </div>
+      ))}
+    </div>
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 py-4">
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         <Label htmlFor="name">Service Name</Label>
         <Input
+          required
           id="name"
+          name="name"
           value={formData.name}
-          onChange={(e) => handleChange("name", e.target.value)}
+          onChange={handleChange}
         />
-        {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+        {renderErrors(errors?.name)}
       </div>
 
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <Label htmlFor="category">Category</Label>
         <Select
           value={formData.category}
@@ -114,20 +92,22 @@ const ServiceForm = ({ initialData, onSubmit, onCancel }: ServiceFormProps) => {
         {errors.category && (
           <p className="text-sm text-red-500">{errors.category}</p>
         )}
-      </div>
+      </div> */}
 
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         <Label htmlFor="price">Price</Label>
         <Input
+          required
           id="price"
+          name="price"
           placeholder="e.g. $50/hr"
           value={formData.price}
-          onChange={(e) => handleChange("price", e.target.value)}
+          onChange={handleChange}
         />
-        {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
+        {renderErrors(errors?.price)}
       </div>
 
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <Label htmlFor="duration">Service Duration</Label>
         <Input
           id="duration"
@@ -135,9 +115,9 @@ const ServiceForm = ({ initialData, onSubmit, onCancel }: ServiceFormProps) => {
           value={formData.duration}
           onChange={(e) => handleChange("duration", e.target.value)}
         />
-      </div>
+      </div> */}
 
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <Label htmlFor="location">Service Area</Label>
         <Input
           id="location"
@@ -145,19 +125,19 @@ const ServiceForm = ({ initialData, onSubmit, onCancel }: ServiceFormProps) => {
           value={formData.location}
           onChange={(e) => handleChange("location", e.target.value)}
         />
-      </div>
+      </div> */}
 
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         <Label htmlFor="description">Description</Label>
         <Textarea
+          required
           id="description"
+          name="description"
           rows={4}
           value={formData.description}
-          onChange={(e) => handleChange("description", e.target.value)}
+          onChange={handleChange}
         />
-        {errors.description && (
-          <p className="text-sm text-red-500">{errors.description}</p>
-        )}
+        {renderErrors(errors?.description)}
       </div>
 
       <DialogFooter>

@@ -118,67 +118,6 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Recent Activity and Quick Actions */}
-        <div className="space-y-6 md:col-span-5">
-          {/* Recent Activity */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Your latest service activity</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-center p-3 rounded-lg hover:bg-accent transition-colors">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-4 
-                      ${activity.type === "New Booking" ? "bg-blue-100 text-blue-600" :
-                        activity.type === "Completed" ? "bg-green-100 text-green-600" :
-                          "bg-amber-100 text-amber-600"}`}>
-                      {activity.type === "New Booking" ? <Calendar className="h-5 w-5" /> :
-                        activity.type === "Completed" ? <Package className="h-5 w-5" /> :
-                          <MessageSquare className="h-5 w-5" />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between">
-                        <p className="font-medium truncate">{activity.type}</p>
-                        <p className="text-xs text-muted-foreground">{activity.date}</p>
-                      </div>
-                      <p className="text-sm text-muted-foreground truncate">
-                        {activity.clientName} • {activity.service}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-                <Button variant="outline" className="w-full mt-2 text-sm" size="sm">
-                  View All Activity
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 grid-cols-2 sm:grid-cols-3">
-                <Button variant="outline" className="h-auto flex flex-col items-center py-4 px-2 border-dashed border-2">
-                  <Package className="h-6 w-6 mb-2 text-localfind-600" />
-                  <span>Add New Service</span>
-                </Button>
-                <Button variant="outline" className="h-auto flex flex-col items-center py-4 px-2 border-dashed border-2">
-                  <Calendar className="h-6 w-6 mb-2 text-localfind-600" />
-                  <span>Update Schedule</span>
-                </Button>
-                <Button variant="outline" className="h-auto flex flex-col items-center py-4 px-2 border-dashed border-2">
-                  <Clock className="h-6 w-6 mb-2 text-localfind-600" />
-                  <span>Manage Hours</span>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   );

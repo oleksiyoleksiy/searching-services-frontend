@@ -31,7 +31,7 @@ const mockContacts = [
   {
     id: '3',
     name: 'Bob Williams',
-    lastMessage: 'I need to reschedule my appointment',
+    lastMessage: 'I need to reschedule my appointmentI need to reschedule my appointmentI need to reschedule my appointmentI need to reschedule my appointmentI need to reschedule my appointmentI need to reschedule my appointmentI need to reschedule my appointment',
     time: new Date(2025, 4, 25, 9, 45),
     unread: 1,
     avatar: 'https://i.pravatar.cc/150?img=3',
@@ -84,7 +84,7 @@ const mockMessages = {
   '3': [
     {
       id: '1',
-      text: 'I need to reschedule my appointment',
+      text: ' I need to reschedule my appointmentI need to reschedule my appointmentI need to reschedule my appointmentI need to reschedule my appointment',
       sender: 'client',
       time: new Date(2025, 4, 25, 9, 45),
     },
@@ -133,10 +133,10 @@ const ProviderChat = () => {
       <Card className="h-[70vh]">
         <div className="grid h-full lg:grid-cols-[320px_1fr]">
           {/* Contacts sidebar */}
-          <div className="border-r">
+          <div className="border-r min-w-0">
             <div className="p-4 font-medium">Conversations</div>
             <Separator />
-            <div className="h-[calc(70vh-53px)] overflow-auto">
+            <div className="h-[calc(70vh-53px)] overflow-auto min-w-0">
               {contacts.map(contact => (
                 <div
                   key={contact.id}
@@ -153,8 +153,8 @@ const ProviderChat = () => {
                         {format(contact.time, 'p')}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <p className="text-sm text-gray-500 truncate">{contact.lastMessage}</p>
+                    <div className="flex justify-between items-center gap-2">
+                      <p className="text-sm text-gray-500 truncate max-w-full">{contact.lastMessage}</p>
                       {contact.unread > 0 && (
                         <Badge variant="destructive" className="h-5 w-5 rounded-full text-[10px] flex items-center justify-center">
                           {contact.unread}
@@ -196,8 +196,8 @@ const ProviderChat = () => {
                       className={`mb-4 flex ${message.sender === 'provider' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div className={`max-w-[80%] rounded-lg px-4 py-2 ${message.sender === 'provider'
-                          ? 'bg-localfind-600 text-white'
-                          : 'bg-gray-100 text-gray-800'
+                        ? 'bg-localfind-600 text-white'
+                        : 'bg-gray-100 text-gray-800'
                         }`}>
                         <p>{message.text}</p>
                         <p className={`text-xs mt-1 ${message.sender === 'provider' ? 'text-white/70' : 'text-gray-500'

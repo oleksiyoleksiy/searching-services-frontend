@@ -52,6 +52,10 @@ export interface Service {
   created_at: string
 }
 
+export interface ProviderService extends Service {
+  bookings: number
+}
+
 export interface Availability {
   weekday: string,
   start: string,
@@ -123,7 +127,17 @@ export interface Booking {
   provider: string
   status: BookingStatus
   price: string
-} 
+}
+
+export interface ProviderBooking {
+  id: number
+  service: string
+  client: string
+  date: string
+  start_time: string
+  price: string,
+  status: BookingStatus,
+}
 
 export interface ApplicationData {
   name: string
@@ -139,4 +153,10 @@ export interface ApplicationResponse extends ApplicationData {
   id: number
   status: ApplicationStatus
   created_at: string
+}
+
+export interface ServiceErrors {
+  name?: string[];
+  price?: string[];
+  description?: string[];
 }
