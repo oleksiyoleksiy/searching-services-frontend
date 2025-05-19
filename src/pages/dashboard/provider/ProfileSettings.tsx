@@ -58,7 +58,6 @@ const ProfileSettings = () => {
   useEffect(() => {
     if (user) {
 
-
       setProfileData({
         name: user.name,
         email: user.email,
@@ -73,10 +72,12 @@ const ProfileSettings = () => {
         company_description: user.company?.description || '',
         description: user.company?.description || '',
       })
-
+      
       if (user.is_have_avatar) {
         setAvatar(user.avatar)
       }
+
+
     }
   }, [user])
 
@@ -120,7 +121,7 @@ const ProfileSettings = () => {
 
     try {
       setIsSubmitting(true)
-
+      
       const response = await providerProviderService.update(profileData).finally(() => setIsSubmitting(false))
 
       if (response) {
@@ -154,11 +155,6 @@ const ProfileSettings = () => {
       </div>
 
       <Tabs defaultValue="profile">
-        <TabsList>
-          <TabsTrigger value="profile">Profile Information</TabsTrigger>
-          <TabsTrigger value="account">Account Settings</TabsTrigger>
-          {/* <TabsTrigger value="notifications">Notifications</TabsTrigger> */}
-        </TabsList>
 
         <TabsContent value="profile" className="space-y-6 pt-6">
           <Card>
@@ -299,90 +295,6 @@ const ProfileSettings = () => {
             </CardContent>
           </Card>
         </TabsContent>
-
-        <TabsContent value="account" className="space-y-6 pt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Password & Security</CardTitle>
-              <CardDescription>
-                Update your password and security settings
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="currentPassword">Current Password</Label>
-                  <Input id="currentPassword" type="password" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="newPassword">New Password</Label>
-                  <Input id="newPassword" type="password" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                  <Input id="confirmPassword" type="password" />
-                </div>
-                <Button type="submit" className="bg-localfind-600 hover:bg-localfind-700">
-                  Update Password
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        {/* 
-        <TabsContent value="notifications" className="space-y-6 pt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>
-                Manage how you receive notifications
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Email Notifications</p>
-                    <p className="text-sm text-muted-foreground">
-                      Receive booking notifications via email
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">SMS Notifications</p>
-                    <p className="text-sm text-muted-foreground">
-                      Receive booking notifications via SMS
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Push Notifications</p>
-                    <p className="text-sm text-muted-foreground">
-                      Receive booking notifications on your device
-                    </p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Marketing Emails</p>
-                    <p className="text-sm text-muted-foreground">
-                      Receive newsletters and promotional emails
-                    </p>
-                  </div>
-                  <Switch />
-                </div>
-                <Button className="bg-localfind-600 hover:bg-localfind-700">
-                  Save Preferences
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent> */}
       </Tabs>
     </div>
   );

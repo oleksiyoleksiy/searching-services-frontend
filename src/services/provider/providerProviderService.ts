@@ -7,7 +7,9 @@ interface Service {
 
 export default <Service>{
   async update(data) {
-    const response = await axiosInstance.post<User>(`/provider/update`, data)
+    const response = await axiosInstance.post<User>(`/provider/update`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
     return response.data
   }
 }

@@ -36,6 +36,7 @@ export interface Company {
   rating: number
   availability: string
   price: string
+  is_owner: boolean
 }
 
 export interface Category {
@@ -77,6 +78,7 @@ export interface ProviderShow {
   availability: string
   availabilities: Availability[]
   is_favorite: boolean
+  is_owner: boolean
 }
 
 export interface Review {
@@ -129,6 +131,13 @@ export interface Booking {
   price: string
 }
 
+export interface ProviderStats {
+  requests: number
+  active_bookings: number
+  completed: number
+  reviews: number
+}
+
 export interface ProviderBooking {
   id: number
   service: string
@@ -159,4 +168,17 @@ export interface ServiceErrors {
   name?: string[];
   price?: string[];
   description?: string[];
+}
+
+export interface Chat {
+  id: number
+  user: User
+  last_message: Message
+}
+
+export interface Message {
+  id: number
+  content: string
+  created_at: string
+  is_owner: boolean
 }

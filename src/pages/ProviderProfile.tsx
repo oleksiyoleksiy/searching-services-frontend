@@ -67,6 +67,15 @@ const ProviderProfile = () => {
     setBookingModalOpen(true);
   };
 
+  const handleWriteReview = () => {
+    if (!user) {
+      setSignInModalOpen(true);
+      return;
+    }
+
+    setSignInModalOpen(true);
+  };
+
   const handleSaveButtonClick = async () => {
     if (!user) {
       setSignInModalOpen(true);
@@ -80,7 +89,7 @@ const ProviderProfile = () => {
         dispatch(providerActions.setProvider({ ...provider!, is_favorite: !provider?.is_favorite }))
       }
     } catch (e: any) {
-
+      console.log(e);
     }
 
   }
@@ -172,13 +181,13 @@ const ProviderProfile = () => {
                   {provider.description}
                 </p>
 
-                <Button
+                {!provider.is_owner && <Button
                   className="w-full md:w-auto bg-localfind-600 hover:bg-localfind-700"
                   size="lg"
                   onClick={handleBookAppointment}
                 >
                   Book an Appointment
-                </Button>
+                </Button>}
               </div>
             </div>
           </div>
@@ -215,7 +224,7 @@ const ProviderProfile = () => {
                       </div>
                     </div>
                     <div>
-                      <Button
+                      {!provider.is_owner && <Button
                         variant="outline"
                         size="sm"
                         className="text-localfind-600 border-localfind-600"
@@ -223,7 +232,7 @@ const ProviderProfile = () => {
                       >
                         Select
                         <ChevronRight className="ml-1 h-4 w-4" />
-                      </Button>
+                      </Button>}
                     </div>
                   </div>
                 ))}
@@ -235,7 +244,7 @@ const ProviderProfile = () => {
                 <h2 className="text-xl font-semibold">Customer Reviews</h2>
                 <Button
                   className="bg-localfind-600 hover:bg-localfind-700"
-                  onClick={() => setReviewModalOpen(true)}
+                  onClick={() => handleWriteReview()}
                 >
                   Write a Review
                 </Button>

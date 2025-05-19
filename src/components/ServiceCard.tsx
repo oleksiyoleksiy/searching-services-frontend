@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Star, MapPin, Clock, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -24,6 +24,7 @@ interface Provider {
   postal_code: string
   availability: string
   featured?: boolean
+  is_owner: boolean
   // services: Service[]
 }
 
@@ -58,6 +59,8 @@ const ServiceCard: React.FC<ServiceProviderProps> = ({
     }
   }
 
+  useEffect(()=> {console.log(provider);
+  }, [provider])
 
   return (
     <>
@@ -120,14 +123,14 @@ const ServiceCard: React.FC<ServiceProviderProps> = ({
             >
               View Profile
             </Button>
-            <Button
+            {!provider.is_owner && <Button
               variant="default"
               size="sm"
               className="flex-1 text-sm bg-localfind-600 hover:bg-localfind-700"
               onClick={handleBookNowClick}
             >
               Book Now
-            </Button>
+            </Button>}
           </div>
         </div>
       </div>
