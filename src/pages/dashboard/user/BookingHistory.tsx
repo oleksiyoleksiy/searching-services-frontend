@@ -137,7 +137,7 @@ const BookingHistory = () => {
                         <TableCell>
                           <div className="flex gap-2">
                             {booking.status === "upcoming" && (
-                              <Button onClick={() => handleCancelButtonClick(booking.id)} variant="outline" size="sm" className="text-red-500 border-red-200 hover:bg-red-50">Cancel</Button>
+                              <Button onClick={() => handleCancelButtonClick(booking.id)} variant="outline" size="sm" className="text-red-500 border-red-200 hover:bg-red-200">Cancel</Button>
                             )}
                           </div>
                         </TableCell>

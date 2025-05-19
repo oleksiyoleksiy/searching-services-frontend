@@ -173,7 +173,7 @@ export interface ServiceErrors {
 export interface Chat {
   id: number
   user: User
-  last_message: Message
+  last_message?: Message
 }
 
 export interface Message {
@@ -181,4 +181,14 @@ export interface Message {
   content: string
   created_at: string
   is_owner: boolean
+}
+
+export interface MessageResponse {
+  date: string
+  messages: Message[]
+}
+
+export interface StoreMessageResponse {
+  date: string
+  message: Message
 }

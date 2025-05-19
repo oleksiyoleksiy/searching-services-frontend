@@ -60,7 +60,7 @@ const ProviderDashboard = () => {
             <SidebarMenu className="p-3">
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentNavItem === "dashboard"}
+                  isActive={location.pathname === "/provider/dashboard"}
                   onClick={() => handleNavigation("/provider/dashboard", "dashboard")}
                 >
                   <ChartPie className="text-localfind-600 min-w-5 min-h-5" />
@@ -69,7 +69,7 @@ const ProviderDashboard = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentNavItem === "services"}
+                  isActive={location.pathname === "/provider/dashboard/services"}
                   onClick={() => handleNavigation("/provider/dashboard/services", "services")}
                 >
                   <Package className="text-localfind-600 min-w-5 min-h-5" />
@@ -78,7 +78,7 @@ const ProviderDashboard = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentNavItem === "bookings"}
+                  isActive={location.pathname === "/provider/dashboard/bookings"}
                   onClick={() => handleNavigation("/provider/dashboard/bookings", "bookings")}
                 >
                   <Calendar className="text-localfind-600 min-w-5 min-h-5" />
@@ -87,7 +87,7 @@ const ProviderDashboard = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentNavItem === "chat"}
+                  isActive={location.pathname === "/provider/dashboard/chat"}
                   onClick={() => handleNavigation("/provider/dashboard/chat", "chat")}
                 >
                   <MessageSquare className="text-localfind-600 min-w-5 min-h-5" />
@@ -96,7 +96,7 @@ const ProviderDashboard = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentNavItem === "reviews"}
+                  isActive={location.pathname === "/provider/dashboard/reviews"}
                   onClick={() => handleNavigation("/provider/dashboard/reviews", "reviews")}
                 >
                   <Star className="text-localfind-600 min-w-5 min-h-5" />
@@ -105,7 +105,7 @@ const ProviderDashboard = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentNavItem === "settings"}
+                  isActive={location.pathname === "/provider/dashboard/settings"}
                   onClick={() => handleNavigation("/provider/dashboard/settings", "settings")}
                 >
                   <Settings className="text-localfind-600 min-w-5 min-h-5" />

@@ -16,7 +16,6 @@ import Dashboard from '@/pages/dashboard/provider/Dashboard'
 import ManageBookings from '@/pages/dashboard/provider/ManageBookings'
 import MyServices from '@/pages/dashboard/provider/MyServices'
 import ProfileSettings from '@/pages/dashboard/provider/ProfileSettings'
-import ProviderChat from '@/pages/dashboard/provider/ProviderChat'
 import ProviderReviews from '@/pages/dashboard/provider/ProviderReviews'
 import ProviderDashboard from '@/pages/dashboard/ProviderDashboard'
 import BookingHistory from '@/pages/dashboard/user/BookingHistory'
@@ -29,6 +28,7 @@ import NotFound from '@/pages/NotFound'
 import ProviderProfile from '@/pages/ProviderProfile'
 import SearchResults from '@/pages/SearchResult'
 import { createBrowserRouter } from 'react-router-dom'
+import ChatPage from '@/pages/dashboard/ChatPage'
 
 const router = createBrowserRouter([
   {
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'chat',
-            element: <ProviderChat />
+            element: <ChatPage />
           },
           {
             path: 'reviews',
@@ -105,6 +105,10 @@ const router = createBrowserRouter([
           {
             path: 'bookings',
             element: <BookingHistory />
+          },
+          {
+            path: 'chat',
+            element: <ChatPage />
           },
           {
             path: 'favorites',

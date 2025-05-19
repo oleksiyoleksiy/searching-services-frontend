@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,19 +7,28 @@ import { Avatar } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
 import { Send } from 'lucide-react';
-import { Chat, Message } from '@/types';
+import { Chat, Message, MessageResponse, StoreMessageResponse, User } from '@/types';
 import messageService from '@/services/messageService';
 import chatService from '@/services/chatService';
+import { useEcho } from '@/hooks/useEcho';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
+interface EventResponse {
+  chat_id: number
+  data: StoreMessageResponse
+}
 
-
-const ProviderChat = () => {
+const ChatPage = () => {
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messageResponses, setMessageResponses] = useState<MessageResponse[]>([]);
   const [formData, setFormData] = useState({
     content: ''
   });
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const { user, accessToken } = useSelector((s: RootState) => s.auth)
+  const echo = useEcho()
 
   const handleSelectContact = (contactId: number) => {
     setSelectedChatId(contactId);
@@ -32,7 +41,7 @@ const ProviderChat = () => {
     const response = await messageService.store(Number(selectedChatId), formData)
 
     if (response) {
-      setMessages(prev => [...prev, response])
+      setMessageResponses(prev => prev.map(m => m.date === response.date ? { ...m, messages: [...m.messages, response.message] } : m))
       setFormData({ content: '' });
     }
 
@@ -42,14 +51,13 @@ const ProviderChat = () => {
     const response = await messageService.index(selectedChatId!)
 
     if (response) {
-      setMessages(response)
+      setMessageResponses(response)
     }
   }
 
   const fetchChats = async () => {
     const response = await chatService.index()
-    console.log(response);
-    
+
     if (response) {
       setChats(response)
     }
@@ -63,7 +71,43 @@ const ProviderChat = () => {
 
   useEffect(() => {
     fetchChats()
+
   }, [])
+
+  useEffect(() => {
+    if (accessToken) {
+      chats.forEach(c => {
+        echo.join(`chat.${c.id}`)
+          .here((users: User[]) => {
+        
+          })
+          .joining((user: User) => {
+            console.log(user);
+          })
+          .listen('.MessageSentEvent', ((e: EventResponse) => {
+            console.log();
+
+            if (e.chat_id === selectedChatId) {
+              setMessageResponses(prev => prev.map(r => r.date === e.data.date ? { ...r, messages: [...r.messages, e.data.message] } : r))
+            }
+            setChats(prev => prev.map(c => ({ ...c, last_message: e.data.message })))
+          }))
+
+      })
+
+      return () => {
+        chats.forEach(c => {
+          echo.leave(`chat.${c.id}`)
+        })
+      }
+    }
+  }, [accessToken])
+
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messageResponses])
 
   const selectedChat = chats.find(c => c.id === selectedChatId)
 
@@ -88,17 +132,19 @@ const ProviderChat = () => {
                   onClick={() => handleSelectContact(chat.id)}
                 >
                   <Avatar className="h-10 w-10">
-                    <img src={chat.user.avatar} alt={chat.user.name} />
+                    <img
+                      className='w-10 h-10 object-center object-cover'
+                      src={chat.user.avatar} alt={chat.user.name} />
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-center">
                       <p className="font-medium truncate">{chat.user.name}</p>
                       <span className="text-xs text-gray-500">
-                        {chat.last_message.created_at}
+                        {chat.last_message?.created_at}
                       </span>
                     </div>
                     <div className="flex justify-between items-center gap-2">
-                      <p className="text-sm text-gray-500 truncate max-w-full">{chat.last_message.content}</p>
+                      <p className="text-sm text-gray-500 truncate max-w-full">{chat.last_message?.is_owner ? 'You: ' : ''}{chat.last_message?.content}</p>
                       {/* {contact.unread > 0 && (
                         <Badge variant="destructive" className="h-5 w-5 rounded-full text-[10px] flex items-center justify-center">
                           {contact.unread}
@@ -112,49 +158,58 @@ const ProviderChat = () => {
             </div>
           </div>
 
-          {/* Chat messages */}
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full lg:overflow-hidden">
             {selectedChatId ? (
               <>
-                {/* Chat header */}
-                <div className="p-4 border-b flex items-center gap-3">
+                <div className="p-4 border-b flex items-center gap-3 shrink-0">
                   <Avatar className="h-10 w-10">
                     <img
+                      className='w-10 h-10 object-center object-cover'
                       src={selectedChat?.user.avatar}
                       alt={selectedChat?.user.name}
                     />
                   </Avatar>
                   <div>
                     <p className="font-medium">{selectedChat?.user.name}</p>
-                    {/* <p className="text-xs text-localfind-600">
-                      {selectedChat?.service}
-                    </p> */}
                   </div>
                 </div>
 
-                {/* Chat messages */}
-                <div className="flex-1 overflow-auto p-4">
-                  {messages?.map((message) => (
-                    <div
-                      key={message.id}
-                      className={`mb-4 flex ${message.is_owner ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div className={`max-w-[80%] rounded-lg px-4 py-2 ${message.is_owner
-                        ? 'bg-localfind-600 text-white'
-                        : 'bg-gray-100 text-gray-800'
-                        }`}>
-                        <p>{message.content}</p>
-                        <p className={`text-xs mt-1 ${message.is_owner ? 'text-white/70' : 'text-gray-500'
-                          }`}>
-                          {message.created_at}
-                        </p>
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {messageResponses?.map((response, i) => (
+                    <div key={i}>
+                      <div className="flex justify-center mb-2">
+                        <span className="bg-localfind-300 p-1.5 text-sm rounded-md text-white">
+                          {response.date}
+                        </span>
                       </div>
+                      {response.messages.map((message) => (
+                        <div
+                          key={message.id}
+                          className={`mb-4 flex ${message.is_owner ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div
+                            className={`max-w-[80%] rounded-lg px-4 py-2 ${message.is_owner
+                              ? 'bg-localfind-600 text-white'
+                              : 'bg-gray-100 text-gray-800'
+                              }`}
+                          >
+                            <p className='break-all'>{message.content}</p>
+                            <p
+                              className={`text-xs mt-1 ${message.is_owner ? 'text-white/70' : 'text-gray-500'
+                                }`}
+                            >
+                              {message.created_at}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   ))}
+                  <div ref={bottomRef} />
                 </div>
 
                 {/* Chat input */}
-                <div className="p-4 border-t">
+                <div className="p-4 border-t shrink-0">
                   <div className="flex gap-2">
                     <Input
                       placeholder="Type your message..."
@@ -181,10 +236,11 @@ const ProviderChat = () => {
               </div>
             )}
           </div>
+
         </div>
       </Card>
     </div>
   );
 };
 
-export default ProviderChat;
+export default ChatPage;

@@ -71,7 +71,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
 }) => {
   const [step, setStep] = useState<number>(0);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [timeSlots, setTimeSlots] = useState<string[]>([]);
+  const [timeSlots, setTimeSlots] = useState<string[]|undefined>(undefined);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const form = useForm<FormValues>({
@@ -128,6 +128,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
       if (response) {
         setIsSubmitted(true);
         form.reset()
+        setTimeSlots(undefined)
         setStep(0)
         toast.success("Booking request received!");
       }
@@ -274,31 +275,36 @@ const BookingModal: React.FC<BookingModalProps> = ({
                     )}
                   />
 
-                  {selectedDate && (
-                    <FormField
-                      control={form.control}
-                      name="start_time"
-                      render={({ field }) => (
-                        <FormItem className="mt-4 flex flex-col gap-2">
-                          <FormLabel>Select a Time</FormLabel>
-                          {timeSlots.length > 0 ? <div className="grid grid-cols-3 gap-2">
-                            {timeSlots?.map((time) => (
-                              <Button
-                                key={time}
-                                type="button"
-                                variant={field.value === time ? "default" : "outline"}
-                                className={field.value === time ? "bg-localfind-600 hover:bg-localfind-700" : ""}
-                                onClick={() => form.setValue('start_time', time)}
-                              >
-                                <Clock className="mr-1 h-4 w-4" />{time}
-                              </Button>
-                            ))}
-                          </div> : <p className='w-full flex justify-center p-5'>no available options for this day</p>}
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )}
+                    {selectedDate && timeSlots !== undefined && (
+                      <FormField
+                        control={form.control}
+                        name="start_time"
+                        render={({ field }) => (
+                          <FormItem className="mt-4 flex flex-col gap-2">
+                            <FormLabel>Select a Time</FormLabel>
+                            {timeSlots.length > 0 ? (
+                              <div className="grid grid-cols-3 gap-2">
+                                {timeSlots.map((time) => (
+                                  <Button
+                                    key={time}
+                                    type="button"
+                                    variant={field.value === time ? "default" : "outline"}
+                                    className={field.value === time ? "bg-localfind-600 hover:bg-localfind-700" : ""}
+                                    onClick={() => form.setValue('start_time', time)}
+                                  >
+                                    <Clock className="mr-1 h-4 w-4" />{time}
+                                  </Button>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="w-full flex justify-center p-5">no available options for this day</p>
+                            )}
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+
 
                   <div className="pt-4 flex justify-between">
                     {!preselectedService && (

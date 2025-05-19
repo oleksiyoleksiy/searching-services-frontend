@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, useNavigate, Outlet, Link } from "react-router-dom";
+import { Routes, Route, useNavigate, Outlet, Link, useLocation } from "react-router-dom";
 import {
   SidebarProvider,
   Sidebar,
@@ -13,7 +13,7 @@ import {
   SidebarInset
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { User, Clock, Star, Settings, Home, LogOut, BookOpen, Heart, ChartPie } from "lucide-react";
+import { User, Clock, Star, Settings, Home, LogOut, BookOpen, Heart, ChartPie, MessageSquare } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/store/authSlice";
 import authService from "@/services/authService";
@@ -24,6 +24,7 @@ const UserDashboard = () => {
   const { user } = useSelector((s: RootState) => s.auth)
   const navigate = useNavigate();
   const dispatch = useDispatch()
+  const location = useLocation()
 
   const handleNavigation = (route: string, navItem: string) => {
     navigate(route);
@@ -44,7 +45,7 @@ const UserDashboard = () => {
       <div className="flex min-h-screen w-full bg-gray-50">
         <Sidebar>
           <SidebarHeader className="border-b border-sidebar-border">
-           
+
             <div className="flex items-center gap-2 px-2">
               <div className="h-7 w-7 rounded-full bg-localfind-100 p-1 text-localfind-600 flex items-center justify-center">
                 <User className="h-4 w-4" />
@@ -59,7 +60,7 @@ const UserDashboard = () => {
             <SidebarMenu className="p-3">
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentNavItem === "home"}
+                  isActive={location.pathname === "/user/dashboard"}
                   onClick={() => handleNavigation("/user/dashboard", "home")}
                 >
                   <ChartPie className="text-localfind-600 min-h-5 min-w-5" />
@@ -68,7 +69,7 @@ const UserDashboard = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentNavItem === "bookings"}
+                  isActive={location.pathname === "/user/dashboard/bookings"}
                   onClick={() => handleNavigation("/user/dashboard/bookings", "bookings")}
                 >
                   <Clock className="text-localfind-600 min-h-5 min-w-5" />
@@ -77,7 +78,16 @@ const UserDashboard = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentNavItem === "favorites"}
+                  isActive={location.pathname === "/user/dashboard/chat"}
+                  onClick={() => handleNavigation("/user/dashboard/chat", "chat")}
+                >
+                  <MessageSquare className="text-localfind-600 min-w-5 min-h-5" />
+                  <span>Chat</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  isActive={location.pathname === "/user/dashboard/favorites"}
                   onClick={() => handleNavigation("/user/dashboard/favorites", "favorites")}
                 >
                   <Heart className="text-localfind-600 min-h-5 min-w-5" />
@@ -86,7 +96,7 @@ const UserDashboard = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive={currentNavItem === "settings"}
+                  isActive={location.pathname === "/user/dashboard/settings"}
                   onClick={() => handleNavigation("/user/dashboard/settings", "settings")}
                 >
                   <Settings className="text-localfind-600 min-h-5 min-w-5" />
