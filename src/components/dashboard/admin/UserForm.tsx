@@ -16,14 +16,12 @@ interface ServiceFormProps {
   onSubmit: (data: any) => void
   onCancel: () => void
   initialErrors?: AdminUserErrors
-  mode: 'create' | 'edit'
 }
 
-function UserForm({ initialData, onSubmit, onCancel, initialErrors, mode }: ServiceFormProps) {
+function UserForm({ initialData, onSubmit, onCancel, initialErrors }: ServiceFormProps) {
   const [formData, setFormData] = useState<AdminUserData>({
     name: initialData?.name || "",
     email: initialData?.email || '',
-    roles: initialData?.roles.map(r => r.id) || [],
     phone_number: initialData?.phone_number || '',
     address: initialData?.address || '',
     bio: initialData?.bio || '',
@@ -132,7 +130,7 @@ function UserForm({ initialData, onSubmit, onCancel, initialErrors, mode }: Serv
       </div>
 
       {
-        mode === 'create' &&
+        !initialData &&
         <>
           <div className="flex flex-col gap-2">
             <Label htmlFor="password">Password</Label>

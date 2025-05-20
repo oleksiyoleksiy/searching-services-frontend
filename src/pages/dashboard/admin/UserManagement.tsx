@@ -12,12 +12,14 @@ import {
   Popover, PopoverContent, PopoverTrigger
 } from "@/components/ui/popover";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AdminUserData, AdminUserErrors, Pagination, User as UserType } from "@/types";
+import { AdminUserData, AdminUserErrors, AdminUserResponse, PaginationData, User as UserType } from "@/types";
 import adminUserService from "@/services/admin/adminUserService";
 import { useSearchParams } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import UserForm from "@/components/dashboard/admin/UserForm";
 import { useDebounce } from 'use-debounce'
+import Loader from "@/components/ui/loader";
+import Pagination from "@/components/ui/pagination";
 
 const UserManagement = () => {
   // const [filteredUsers, setFilteredUsers] = useState(users);
@@ -26,14 +28,14 @@ const UserManagement = () => {
   const [search, setSearch] = useState<string>(searchParams.get('search') || '')
   const [debouncedSearch] = useDebounce(search, 500);
   const [selectedUser, setSelectedUser] = useState<UserType>()
-  const [dialogMode, setDialogMode] = useState<'create' | 'edit'>()
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
-  const [paginationData, setPaginationData] = useState<Pagination>()
+  const [paginationData, setPaginationData] = useState<PaginationData>()
   const [userStats, setUserStats] = useState([
-    { title: "Total Users", value: 238, icon: User, colorClass: "bg-blue-100 text-blue-600" },
-    { title: "New This Month", value: 42, icon: User, colorClass: "bg-green-100 text-green-600" },
+    { title: "Total Users", value: 0, icon: User, colorClass: "bg-blue-100 text-blue-600" },
+    { title: "New This Month", value: 0, icon: User, colorClass: "bg-green-100 text-green-600" },
   ])
   const [errors, setErrors] = useState<AdminUserErrors>()
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -41,6 +43,8 @@ const UserManagement = () => {
   };
 
   const fetchUsers = async () => {
+    setIsLoading(true)
+
     const response = await adminUserService.index(searchParams.toString())
 
     if (response) {
@@ -48,20 +52,16 @@ const UserManagement = () => {
       setUserStats(prev => [({ ...prev[0], value: response.data.total_users }), ({ ...prev[1], value: response.data.new_this_month })])
       setPaginationData({ meta: response.meta, links: response.links })
     }
+
   }
 
   const handleUserSave = async (formData: AdminUserData) => {
-    console.log(formData);
-
-
     try {
       let response
 
-      if (dialogMode === 'create') {
+      if (!selectedUser) {
         response = await adminUserService.store(formData)
       } else {
-        if (!selectedUser) return
-
         response = await adminUserService.update(formData, selectedUser.id)
       }
 
@@ -90,16 +90,14 @@ const UserManagement = () => {
   }, [debouncedSearch]);
 
   useEffect(() => {
-    fetchUsers()
+    fetchUsers().finally(() => setIsLoading(false))
   }, [searchParams])
 
   const handleAddButtonClick = () => {
-    setDialogMode('create')
     setIsDialogOpen(true)
   }
 
   const handleEditButtonClick = (user: UserType) => {
-    setDialogMode('edit')
     setSelectedUser(user)
     setIsDialogOpen(true)
   }
@@ -111,25 +109,7 @@ const UserManagement = () => {
     }
   }, [isDialogOpen])
 
-  const handleNextButtonClick = () => {
-    if (!paginationData?.links.next) return
-
-    const params = new URLSearchParams(searchParams);
-
-    params.set('page', String(Number(searchParams.get('page') || 1) + 1))
-
-    setSearchParams(params)
-  }
-
-  const handlePrevButtonClick = () => {
-    if (!paginationData?.links.prev) return
-
-    const params = new URLSearchParams(searchParams);
-
-    params.set('page', String(Number(searchParams.get('page') || 1) - 1))
-
-    setSearchParams(params)
-  }
+  if (isLoading) return <Loader />
 
   return (
     <div>
@@ -223,26 +203,14 @@ const UserManagement = () => {
               </TableBody>
             </Table>
           </div>
-          <div className="flex items-center justify-between mt-4">
-            <p className="text-sm text-gray-500">
-              Showing <strong>{paginationData?.meta.current_page}</strong> of <strong>{paginationData?.meta.last_page}</strong> users
-            </p>
-            <div className="flex gap-2">
-              <Button onClick={handlePrevButtonClick} variant="outline" size="sm" disabled={!paginationData?.links.prev}>
-                Previous
-              </Button>
-              <Button onClick={handleNextButtonClick} variant="outline" size="sm" disabled={!paginationData?.links.next}>
-                Next
-              </Button>
-            </div>
-          </div>
+          <Pagination paginationData={paginationData} />
         </CardContent>
       </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[600px] max-h-[500px] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{dialogMode === 'create' ? 'Create New User' : 'Edit User'}</DialogTitle>
+            <DialogTitle>{!selectedUser ? 'Create New User' : 'Edit User'}</DialogTitle>
           </DialogHeader>
           <UserForm
             initialData={selectedUser}
@@ -251,7 +219,6 @@ const UserManagement = () => {
               setIsDialogOpen(false)
             }}
             initialErrors={errors}
-            mode={dialogMode!}
           />
         </DialogContent>
       </Dialog>

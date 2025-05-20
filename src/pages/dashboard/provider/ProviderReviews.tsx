@@ -74,7 +74,6 @@ const ProviderReviews = () => {
                       <span>{review.user.name}</span>
                     </div>
                   </TableCell>
-                  {/* <TableCell>{review.serviceName}</TableCell> */}
                   <TableCell>
                     <div className="flex">
                       {renderStars(review.rating)}
@@ -84,15 +83,6 @@ const ProviderReviews = () => {
                     <p className="truncate">{review.content}</p>
                   </TableCell>
                   <TableCell>{review.created_at}</TableCell>
-                  {/* <TableCell>
-                    {review.reply ? (
-                      <p className="text-sm text-gray-600 max-w-[200px] truncate">{review.reply}</p>
-                    ) : (
-                      <span className="text-sm text-blue-500 cursor-pointer hover:underline">
-                        Reply to review
-                      </span>
-                    )}
-                  </TableCell> */}
                 </TableRow>
               ))}
             </TableBody>

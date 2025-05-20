@@ -194,12 +194,29 @@ export interface StoreMessageResponse {
   message: Message
 }
 
-export interface AdminUserResponse extends Pagination {
-  data: {
-    users: User[]
-    total_users: number
-    new_this_month: number
-  }
+export interface AdminUserResponse {
+  users: User[]
+  total_users: number
+  new_this_month: number
+}
+
+export interface AdminServiceResponse {
+  services: AdminService[]
+  total_services: number
+}
+
+export interface AdminService {
+  id: number
+  name: string,
+  provider: string,
+  price: string
+  description: string
+}
+
+export interface AdminServiceData {
+  name: string,
+  description: string,
+  price: string
 }
 
 interface PaginationLinks {
@@ -226,10 +243,15 @@ interface PaginationMeta {
   total: number
 }
 
-export interface Pagination {
+export interface PaginationData {
   links: PaginationLinks
   meta: PaginationMeta
 }
+
+export interface Pagination<T> extends PaginationData {
+  data: T
+}
+
 
 export interface AdminUserData {
   name: string
@@ -237,7 +259,6 @@ export interface AdminUserData {
   avatar: File | null
   avatar_remove: 1 | 0
   bio: string
-  roles: number[]
   phone_number: string
   postal_code: string
   address: string
