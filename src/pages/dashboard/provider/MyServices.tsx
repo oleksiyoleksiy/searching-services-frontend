@@ -21,6 +21,7 @@ import ServiceForm from '@/components/dashboard/ServiceForm';
 import { Plus, Edit, Trash } from 'lucide-react';
 import providerServiceService from '@/services/provider/providerServiceService';
 import { ProviderService, Service, ServiceErrors } from '@/types';
+import ServiceDeleteModal from '@/components/ServiceDeleteModal';
 
 
 
@@ -28,18 +29,15 @@ const MyServices = () => {
   const [services, setServices] = useState<ProviderService[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentService, setCurrentService] = useState<ProviderService | null>(null);
-  const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create');
+  const [currentService, setCurrentService] = useState<ProviderService>();
   const [errors, setErrors] = useState<ServiceErrors>({});
 
   const handleCreateService = () => {
-    setDialogMode('create');
-    setCurrentService(null);
+    setCurrentService(undefined);
     setIsDialogOpen(true);
   };
 
   const handleEditService = (service: any) => {
-    setDialogMode('edit');
     setCurrentService(service);
     setIsDialogOpen(true);
   };
@@ -72,14 +70,14 @@ const MyServices = () => {
 
   const handleSaveService = async (serviceData: any) => {
     try {
-      if (dialogMode === 'create') {
+      if (!currentService) {
         const response = await providerServiceService.store(serviceData)
 
         if (response) {
           setServices([response, ...services]);
         }
       } else {
-        const response = await providerServiceService.update(Number(currentService?.id), serviceData)
+        const response = await providerServiceService.update(Number(currentService.id), serviceData)
 
         if (response) {
           setServices(prev => prev.map(s => s.id === response.id ? response : s));
@@ -120,11 +118,6 @@ const MyServices = () => {
                   <TableCell>{service.price}</TableCell>
                   <TableCell>{service.bookings}</TableCell>
                   <TableCell>{service.description}</TableCell>
-                  {/* <TableCell>
-                    <Badge variant={service.status === 'active' ? 'default' : 'secondary'}>
-                      {service.status === 'active' ? 'Active' : 'Inactive'}
-                    </Badge>
-                  </TableCell> */}
                   <TableCell className="flex flex-wrap gap-2 justify-end">
                     <Button variant="outline" size="sm" onClick={() => handleEditService(service)}>
                       <Edit className="h-4 w-4" />
@@ -143,7 +136,7 @@ const MyServices = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle>{dialogMode === 'create' ? 'Create New Service' : 'Edit Service'}</DialogTitle>
+            <DialogTitle>{!currentService ? 'Create New Service' : 'Edit Service'}</DialogTitle>
           </DialogHeader>
           <ServiceForm
             initialData={currentService}
@@ -157,18 +150,12 @@ const MyServices = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Service</DialogTitle>
-          </DialogHeader>
-          <p>Are you sure you want to delete "{currentService?.name}"? This action cannot be undone.</p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={handleDeleteService}>Delete Service</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ServiceDeleteModal
+        selectedService={currentService}
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onCancel={() => setIsDeleteDialogOpen(false)}
+        onDelete={handleDeleteService} />
     </div>
   );
 };
