@@ -71,37 +71,59 @@ const ChatPage = () => {
 
   useEffect(() => {
     fetchChats()
-
   }, [])
 
   useEffect(() => {
-    if (accessToken) {
-      chats.forEach(c => {
-        echo.join(`chat.${c.id}`)
-          .here((users: User[]) => {
-        
-          })
-          .joining((user: User) => {
-            console.log(user);
-          })
-          .listen('.MessageSentEvent', ((e: EventResponse) => {
-            console.log();
+    if (!accessToken || chats.length === 0) return;
+    try {
+
+      chats.forEach((chat) =>
+        echo.channel(`chat.${chat.id}`)
+          // .here((users: User[]) => {
+          //   console.log('Users in chat:', users);
+          // })
+          // .joining((user: User) => {
+          //   console.log('User joined:', user);
+          // })
+          // .leaving((user: User) => {
+          //   console.log('User left:', user);
+          // })
+          .listen('.MessageSentEvent', (e: EventResponse) => {
+            if (e.data.message.user_id === user?.id) return
 
             if (e.chat_id === selectedChatId) {
-              setMessageResponses(prev => prev.map(r => r.date === e.data.date ? { ...r, messages: [...r.messages, e.data.message] } : r))
+              setMessageResponses(prev =>
+                prev.map(r =>
+                  r.date === e.data.date
+                    ? { ...r, messages: [...r.messages, e.data.message] }
+                    : r
+                )
+              );
             }
-            setChats(prev => prev.map(c => ({ ...c, last_message: e.data.message })))
-          }))
 
-      })
+            setChats(prev =>
+              prev.map(c =>
+                c.id === e.chat_id
+                  ? { ...c, last_message: e.data.message }
+                  : c
+              )
+            );
+          })
+      );
 
       return () => {
-        chats.forEach(c => {
-          echo.leave(`chat.${c.id}`)
-        })
+        chats.forEach(chat => {
+          echo.leave(`chat.${chat.id}`);
+        });
       }
-    }
-  }, [accessToken])
+    } catch (e: any) {
+      console.log(e);
+      
+    };
+
+  }, [accessToken, chats, selectedChatId]);
+
+
 
   useEffect(() => {
     if (bottomRef.current) {
@@ -127,7 +149,7 @@ const ChatPage = () => {
             <div className="h-[calc(70vh-53px)] overflow-auto min-w-0">
               {chats.map(chat => (
                 <div
-                  key={chat.id}
+                  key={chat.last_message?.created_at}
                   className={`p-4 flex gap-5 items-center cursor-pointer hover:bg-gray-50 ${selectedChatId === chat.id ? 'bg-gray-100' : ''}`}
                   onClick={() => handleSelectContact(chat.id)}
                 >
@@ -144,7 +166,7 @@ const ChatPage = () => {
                       </span>
                     </div>
                     <div className="flex justify-between items-center gap-2">
-                      <p className="text-sm text-gray-500 truncate max-w-full">{chat.last_message?.is_owner ? 'You: ' : ''}{chat.last_message?.content}</p>
+                      <p className="text-sm text-gray-500 truncate max-w-full">{chat.last_message?.user_id === user?.id ? 'You: ' : ''}{chat.last_message?.content}</p>
                       {/* {contact.unread > 0 && (
                         <Badge variant="destructive" className="h-5 w-5 rounded-full text-[10px] flex items-center justify-center">
                           {contact.unread}
@@ -185,17 +207,17 @@ const ChatPage = () => {
                       {response.messages.map((message) => (
                         <div
                           key={message.id}
-                          className={`mb-4 flex ${message.is_owner ? 'justify-end' : 'justify-start'}`}
+                          className={`mb-4 flex ${message.user_id === user?.id ? 'justify-end' : 'justify-start'}`}
                         >
                           <div
-                            className={`max-w-[80%] rounded-lg px-4 py-2 ${message.is_owner
+                            className={`max-w-[80%] rounded-lg px-4 py-2 ${message.user_id === user?.id
                               ? 'bg-localfind-600 text-white'
                               : 'bg-gray-100 text-gray-800'
                               }`}
                           >
                             <p className='break-all'>{message.content}</p>
                             <p
-                              className={`text-xs mt-1 ${message.is_owner ? 'text-white/70' : 'text-gray-500'
+                              className={`text-xs mt-1 ${message.user_id === user?.id ? 'text-white/70' : 'text-gray-500'
                                 }`}
                             >
                               {message.created_at}

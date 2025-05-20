@@ -8,7 +8,6 @@ import Register from '@/pages/auth/Register'
 import CategoryPage from '@/pages/CategoryPage'
 import AdminHome from '@/pages/dashboard/admin/AdminHome'
 import AdminSettings from '@/pages/dashboard/admin/AdminSettings'
-import Notifications from '@/pages/dashboard/admin/Notifications'
 import ServiceManagement from '@/pages/dashboard/admin/ServiceManagement'
 import UserManagement from '@/pages/dashboard/admin/UserManagement'
 import AdminDashboard from '@/pages/dashboard/AdminDashboard'
@@ -135,10 +134,6 @@ const router = createBrowserRouter([
           {
             path: 'services',
             element: <ServiceManagement />
-          },
-          {
-            path: 'notifications',
-            element: <Notifications />
           },
           {
             path: 'settings',

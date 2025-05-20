@@ -9,11 +9,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-// import AdminHome from "./admin/AdminHome";
-// import UserManagement from "./admin/UserManagement";
-// import ServiceManagement from "./admin/ServiceManagement";
-// import Notifications from "./admin/Notifications";
-// import AdminSettings from "./admin/AdminSettings";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -127,30 +123,7 @@ const AdminDashboard = () => {
                 {sidebarOpen && <span className="ml-3">Services</span>}
               </Link>
             </li>
-            <li>
-              <Link
-                to="/admin/dashboard/notifications"
-                className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/notifications")
-                  ? "bg-localfind-50 text-localfind-700"
-                  : "hover:bg-gray-100"
-                  }`}
-              >
-                <div className="relative flex justify-center">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                    3
-                  </span>
-                </div>
-                {sidebarOpen && (
-                  <div className="flex items-center ml-3 w-full">
-                    <span>Notifications</span>
-                    <Badge variant="destructive" className="ml-auto text-xs h-5 min-w-[20px]">
-                      3
-                    </Badge>
-                  </div>
-                )}
-              </Link>
-            </li>
+
             <li>
               <Link
                 to="/admin/dashboard/settings"
@@ -232,17 +205,6 @@ const AdminDashboard = () => {
                       <span>Services</span>
                     </Link>
                     <Link
-                      to="/admin/dashboard/notifications"
-                      className={`flex items-center px-3 py-2 rounded-md transition-colors ${isActive("/admin/dashboard/notifications")
-                        ? "bg-localfind-50 text-localfind-700"
-                        : "hover:bg-gray-100"
-                        }`}
-                    >
-                      <Bell className="h-5 w-5 mr-3" />
-                      <span>Notifications</span>
-                      <Badge variant="destructive" className="ml-2">3</Badge>
-                    </Link>
-                    <Link
                       to="/admin/dashboard/settings"
                       className={`flex items-center px-3 py-2 rounded-md transition-colors ${isActive("/admin/dashboard/settings")
                         ? "bg-localfind-50 text-localfind-700"
@@ -272,12 +234,6 @@ const AdminDashboard = () => {
               </Collapsible>
             </div>
             <div className="flex items-center gap-4">
-              <div className="relative hidden md:block">
-                <Bell className="h-5 w-5 cursor-pointer" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  3
-                </span>
-              </div>
               <div className="flex items-center gap-3">
                 <Avatar>
                   <AvatarImage src={user?.avatar} className="bg-localfind-600 text-white object-cover" />

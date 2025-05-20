@@ -180,7 +180,8 @@ export interface Message {
   id: number
   content: string
   created_at: string
-  is_owner: boolean
+  // is_owner: boolean
+  user_id: number
 }
 
 export interface MessageResponse {
@@ -191,4 +192,69 @@ export interface MessageResponse {
 export interface StoreMessageResponse {
   date: string
   message: Message
+}
+
+export interface AdminUserResponse extends Pagination {
+  data: {
+    users: User[]
+    total_users: number
+    new_this_month: number
+  }
+}
+
+interface PaginationLinks {
+  first: string
+  last: string
+  prev: string | null
+  next: string | null
+}
+
+interface PaginationMetaLinks {
+  url: string | null
+  label: string
+  active: boolean
+}
+
+interface PaginationMeta {
+  current_page: number
+  from: number
+  last_page: number
+  links: PaginationMetaLinks
+  path: string
+  per_page: number
+  to: number
+  total: number
+}
+
+export interface Pagination {
+  links: PaginationLinks
+  meta: PaginationMeta
+}
+
+export interface AdminUserData {
+  name: string
+  email: string
+  avatar: File | null
+  avatar_remove: 1 | 0
+  bio: string
+  roles: number[]
+  phone_number: string
+  postal_code: string
+  address: string
+  password: string
+  password_confirmation: string
+  is_admin: 1 | 0
+}
+
+export interface AdminUserErrors {
+  name?: string[]
+  email?: string[]
+  phone_number?: string[]
+  address?: string[]
+  bio?: string[]
+  avatar?: string[]
+  roles?: number[]
+  password?: string[]
+  postal_code?: string[]
+  is_admin?: string[]
 }
