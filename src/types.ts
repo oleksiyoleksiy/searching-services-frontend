@@ -279,3 +279,10 @@ export interface AdminUserErrors {
   postal_code?: string[]
   is_admin?: string[]
 }
+
+export interface AdminStats {
+  total_users: number
+  total_services: number
+  total_bookings: number
+  revenue: number
+}
