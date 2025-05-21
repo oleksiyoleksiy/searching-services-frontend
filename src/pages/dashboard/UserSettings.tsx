@@ -4,9 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ImageUpload from "@/components/ImageUpload";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckIcon } from "lucide-react";
@@ -79,13 +76,6 @@ const UserSettings = () => {
     }));
   };
 
-  const handleLanguageChange = (value: string) => {
-    setProfileData(prev => ({
-      ...prev,
-      language: value
-    }));
-  };
-
   const handleImageChange = (file: File | null, imageURL: string | null) => {
     setProfileData(prev => ({ ...prev, avatar: file, avatar_remove: file ? 0 : 1 }))
 
@@ -103,6 +93,7 @@ const UserSettings = () => {
       if (response) {
         dispatch(authActions.setUser(response))
         setIsSuccess(true)
+        setErrors({})
       }
 
     } catch (e: any) {

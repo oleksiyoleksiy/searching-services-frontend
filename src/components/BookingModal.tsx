@@ -134,7 +134,9 @@ const BookingModal: React.FC<BookingModalProps> = ({
       }
     } catch (e: any) {
       console.log(e);
-      
+      if (e.response?.data?.message) {
+        toast.error(e.response?.data?.message)
+      }
     }
   };
 

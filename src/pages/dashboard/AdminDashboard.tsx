@@ -6,7 +6,8 @@ import {
   ChevronRight,
   ChevronLeft,
   Home,
-  MessageSquare
+  MessageSquare,
+  UserCog2
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -145,7 +146,7 @@ const AdminDashboard = () => {
                   : "hover:bg-gray-100"
                   }`}
               >
-                <Settings className="h-5 w-5" />
+                <UserCog2 className="h-5 w-5" />
                 {sidebarOpen && <span className="ml-3">Settings</span>}
               </Link>
             </li>
@@ -234,7 +235,7 @@ const AdminDashboard = () => {
                         : "hover:bg-gray-100"
                         }`}
                     >
-                      <Settings className="h-5 w-5 mr-3" />
+                      <UserCog2 className="h-5 w-5 mr-3" />
                       <span>Settings</span>
                     </Link>
                     <Link

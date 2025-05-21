@@ -10,6 +10,7 @@ import { categories, categoryIcons, serviceProviders } from '@/data/mockData'
 import { ChevronRight } from 'lucide-react'
 import { Company } from '@/types'
 import categoryProviderService from '@/services/categoryProviderService'
+import categoryService from '@/services/categoryService'
 
 interface Category {
   id: string
@@ -29,6 +30,7 @@ const CategoryPage = () => {
     providers_count: 0,
     color: '',
   })
+  const [categories, setCategories] = useState<Category[]>([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [providers, setProviders] = useState<Company[]>([])
 
@@ -69,6 +71,19 @@ const CategoryPage = () => {
 
   }, [searchParams])
 
+  const fetchCategories = async () => {
+    const response = await categoryService.index('limit=5')
+
+    if (response) {
+      setCategories(response.map(c => ({
+        ...c, id: String(c.id),
+        icon: categoryIcons[Number(c.id)]?.icon,
+        color: categoryIcons[Number(c.id)]?.color,
+      })))
+    }
+  }
+
+  useEffect(() => { fetchCategories() }, [])
 
 
   return (
@@ -180,14 +195,14 @@ const CategoryPage = () => {
                 .map(cat => (
                   <a
                     key={cat.id}
-                    href={cat.to}
+                    href={`/category/${cat.id}`}
                     className="flex items-center p-4 border rounded-lg hover:border-localfind-500 hover:bg-localfind-50 transition-colors"
                   >
                     <div className="mr-3 text-gray-800">{cat.icon}</div>
                     <div>
-                      <h3 className="font-medium text-gray-800">{cat.title}</h3>
+                      <h3 className="font-medium text-gray-800">{cat.name}</h3>
                       <p className="text-sm text-gray-500">
-                        {cat.providerCount} providers
+                        {cat.providers_count} providers
                       </p>
                     </div>
                   </a>

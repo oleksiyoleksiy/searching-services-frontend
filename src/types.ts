@@ -104,19 +104,31 @@ export interface User {
   postal_code: string
 }
 
+interface TimeSlot {
+  start: string;
+  end: string;
+}
+
+interface BusinessHours {
+  0: TimeSlot | null;
+  1: TimeSlot | null;
+  2: TimeSlot | null;
+  3: TimeSlot | null;
+  4: TimeSlot | null;
+  5: TimeSlot | null;
+  6: TimeSlot | null;
+}
+
 export interface ProviderProfileData {
   name: string
-  email: string
-  phone_number: string
-  address: string
-  bio: string
-  avatar: File | null
-  avatar_remove: 1 | 0
-  company_name: string
-  categories: string[]
+  categories: number[]
   years_of_experience: string
-  company_description: string
   description: string
+  preview?: File | null
+  preview_remove: 0 | 1
+  gallery_images: File[]
+  gallery_images_remove: number[]
+  business_hours: BusinessHours
 }
 
 export type BookingStatus = 'pending' | 'cancelled' | 'upcoming' | 'rejected' | 'no_show' | 'completed'
@@ -174,6 +186,25 @@ export interface Chat {
   id: number
   user: User
   last_message?: Message
+}
+
+interface GalleryImage {
+  id: number
+  path: string
+}
+
+export interface ProviderCompanyResponse {
+  id: number
+  user: User
+  preview: string
+  gallery: GalleryImage[]
+  availabilities: ProviderCompanyAvailability[]
+}
+
+interface ProviderCompanyAvailability {
+  weekday: number
+  start: string
+  end: string
 }
 
 export interface Message {

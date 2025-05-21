@@ -13,7 +13,7 @@ import {
   SidebarInset
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { User, Clock, Star, Settings, Home, LogOut, BookOpen, Heart, ChartPie, MessageSquare } from "lucide-react";
+import { User, Clock, Star, Settings, Home, LogOut, BookOpen, Heart, ChartPie, MessageSquare, UserCog2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "@/store/authSlice";
 import authService from "@/services/authService";
@@ -99,7 +99,7 @@ const UserDashboard = () => {
                   isActive={location.pathname === "/user/dashboard/settings"}
                   onClick={() => handleNavigation("/user/dashboard/settings", "settings")}
                 >
-                  <Settings className="text-localfind-600 min-h-5 min-w-5" />
+                  <UserCog2 className="text-localfind-600 min-h-5 min-w-5" />
                   <span>Profile Settings</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>

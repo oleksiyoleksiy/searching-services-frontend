@@ -13,7 +13,7 @@ import {
   SidebarInset
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { User, Package, Calendar, MessageSquare, Star, Settings, Home, LogOut, ChartPie } from "lucide-react";
+import { User, Package, Calendar, MessageSquare, Star, Settings, Home, LogOut, ChartPie, UserCog2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import authService from "@/services/authService";
@@ -105,10 +105,19 @@ const ProviderDashboard = () => {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
+                  isActive={location.pathname === "/provider/dashboard/company-settings"}
+                  onClick={() => handleNavigation("/provider/dashboard/company-settings", "company-settings")}
+                >
+                  <Settings className="text-localfind-600 min-w-5 min-h-5" />
+                  <span>Company Settings</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
                   isActive={location.pathname === "/provider/dashboard/settings"}
                   onClick={() => handleNavigation("/provider/dashboard/settings", "settings")}
                 >
-                  <Settings className="text-localfind-600 min-w-5 min-h-5" />
+                  <UserCog2 className="text-localfind-600 min-w-5 min-h-5" />
                   <span>Profile Settings</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>

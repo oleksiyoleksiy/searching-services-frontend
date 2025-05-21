@@ -36,7 +36,8 @@ const ProviderProfile = () => {
 
   const fetchProvider = async () => {
     const response = await providerService.show(Number(id))
-
+    console.log(response);
+    
     if (response) {
       dispatch(providerActions.setProvider(response))
     }

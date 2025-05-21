@@ -7,20 +7,18 @@ import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import CategoryPage from '@/pages/CategoryPage'
 import AdminHome from '@/pages/dashboard/admin/AdminHome'
-import AdminSettings from '@/pages/dashboard/admin/AdminSettings'
 import ServiceManagement from '@/pages/dashboard/admin/ServiceManagement'
 import UserManagement from '@/pages/dashboard/admin/UserManagement'
 import AdminDashboard from '@/pages/dashboard/AdminDashboard'
 import Dashboard from '@/pages/dashboard/provider/Dashboard'
 import ManageBookings from '@/pages/dashboard/provider/ManageBookings'
 import MyServices from '@/pages/dashboard/provider/MyServices'
-import ProfileSettings from '@/pages/dashboard/provider/ProfileSettings'
 import ProviderReviews from '@/pages/dashboard/provider/ProviderReviews'
 import ProviderDashboard from '@/pages/dashboard/ProviderDashboard'
 import BookingHistory from '@/pages/dashboard/user/BookingHistory'
 import FavoriteServices from '@/pages/dashboard/user/FavoriteServices'
 import UserHome from '@/pages/dashboard/user/UserHome'
-import UserSettings from '@/pages/dashboard/user/UserSettings'
+import UserSettings from '@/pages/dashboard/UserSettings'
 import UserDashboard from '@/pages/dashboard/UserDashboard'
 import Home from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
@@ -29,6 +27,7 @@ import SearchResults from '@/pages/SearchResult'
 import { createBrowserRouter } from 'react-router-dom'
 import ChatPage from '@/pages/dashboard/ChatPage'
 import ReviewManagement from '@/pages/dashboard/admin/ReviewManagement'
+import CompanyProfile from '@/pages/dashboard/provider/CompanyProfile'
 
 const router = createBrowserRouter([
   {
@@ -90,7 +89,11 @@ const router = createBrowserRouter([
           },
           {
             path: 'settings',
-            element: <ProfileSettings />
+            element: <UserSettings />
+          },
+          {
+            path: 'company-settings',
+            element: <CompanyProfile />
           }
         ]
       },
@@ -142,7 +145,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'settings',
-            element: <AdminSettings />
+            element: <UserSettings />
           },
         ]
       },
