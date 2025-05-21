@@ -6,6 +6,7 @@ import { Company, Service } from "@/types";
 import favoriteService from "@/services/favoriteService";
 import BookingModal from "@/components/BookingModal";
 import serviceService from "@/services/serviceService";
+import { useNavigate } from "react-router-dom";
 
 interface FavoriteService extends Company {
   is_favorite: boolean;
@@ -16,6 +17,7 @@ const FavoriteServices = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<FavoriteService>();
   const [services, setServices] = useState<Service[]>();
+  const navigate = useNavigate()
 
   const fetchFavorites = async () => {
     const response = await favoriteService.index();
@@ -117,7 +119,7 @@ const FavoriteServices = () => {
               >
                 Book Now
               </Button>}
-              <Button variant="outline" className="flex-1">
+              <Button onClick={() => navigate(`/provider/${provider.id}`)} variant="outline" className="flex-1">
                 View Details
               </Button>
             </CardFooter>

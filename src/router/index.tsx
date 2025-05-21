@@ -15,8 +15,8 @@ import ManageBookings from '@/pages/dashboard/provider/ManageBookings'
 import MyServices from '@/pages/dashboard/provider/MyServices'
 import ProviderReviews from '@/pages/dashboard/provider/ProviderReviews'
 import ProviderDashboard from '@/pages/dashboard/ProviderDashboard'
-import BookingHistory from '@/pages/dashboard/user/BookingHistory'
-import FavoriteServices from '@/pages/dashboard/user/FavoriteServices'
+import BookingHistory from '@/pages/dashboard/BookingHistory'
+import FavoriteServices from '@/pages/dashboard/FavoriteServices'
 import UserHome from '@/pages/dashboard/user/UserHome'
 import UserSettings from '@/pages/dashboard/UserSettings'
 import UserDashboard from '@/pages/dashboard/UserDashboard'
@@ -78,6 +78,14 @@ const router = createBrowserRouter([
           {
             path: 'bookings',
             element: <ManageBookings />
+          },
+          {
+            path: 'my-bookings',
+            element: <BookingHistory />
+          },
+          {
+            path: 'favorites',
+            element: <FavoriteServices />
           },
           {
             path: 'chat',

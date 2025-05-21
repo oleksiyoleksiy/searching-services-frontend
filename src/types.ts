@@ -225,39 +225,6 @@ export interface StoreMessageResponse {
   message: Message
 }
 
-export interface AdminUserResponse {
-  users: User[]
-  total_users: number
-  new_this_month: number
-}
-
-export interface AdminReview extends Review {
-  company: string
-}
-
-export interface AdminReviewResponse {
-  reviews: AdminReview[]
-  total_reviews: number
-}
-
-export interface AdminServiceResponse {
-  services: AdminService[]
-  total_services: number
-}
-
-export interface AdminService {
-  id: number
-  name: string,
-  provider: string,
-  price: string
-  description: string
-}
-
-export interface AdminServiceData {
-  name: string,
-  description: string,
-  price: string
-}
 
 interface PaginationLinks {
   first: string
@@ -325,4 +292,44 @@ export interface AdminStats {
   total_services: number
   total_bookings: number
   revenue: number
+}
+
+
+export interface AdminUserResponse {
+  users: User[]
+  total_users: number
+  new_this_month: number
+}
+
+export interface AdminReview extends Review {
+  company: string
+}
+
+export interface AdminReviewResponse {
+  reviews: AdminReview[]
+  total_reviews: number
+}
+
+export interface AdminServiceResponse {
+  services: AdminService[]
+  total_services: number
+}
+
+export interface AdminService {
+  id: number
+  name: string,
+  provider: string,
+  price: string
+  description: string
+}
+
+export interface AdminServiceData {
+  name: string,
+  description: string,
+  price: string
+}
+
+export interface AdminCategoryResponse {
+  categories: Category[]
+  total_categories: number
 }

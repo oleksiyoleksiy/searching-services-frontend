@@ -13,7 +13,7 @@ import {
   SidebarInset
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { User, Package, Calendar, MessageSquare, Star, Settings, Home, LogOut, ChartPie, UserCog2 } from "lucide-react";
+import { User, Package, Calendar, MessageSquare, Star, Settings, Home, LogOut, ChartPie, UserCog2, Heart } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import authService from "@/services/authService";
@@ -83,6 +83,24 @@ const ProviderDashboard = () => {
                 >
                   <Calendar className="text-localfind-600 min-w-5 min-h-5" />
                   <span>Manage Bookings</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  isActive={location.pathname === "/provider/dashboard/my-bookings"}
+                  onClick={() => handleNavigation("/provider/dashboard/my-bookings", "my-bookings")}
+                >
+                  <Calendar className="text-localfind-600 min-w-5 min-h-5" />
+                  <span>My Bookings</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  isActive={location.pathname === "/provider/dashboard/favorites"}
+                  onClick={() => handleNavigation("/provider/dashboard/favorites", "favorite")}
+                >
+                  <Heart className="text-localfind-600 min-w-5 min-h-5" />
+                  <span>Favorites</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
