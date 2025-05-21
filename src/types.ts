@@ -200,6 +200,15 @@ export interface AdminUserResponse {
   new_this_month: number
 }
 
+export interface AdminReview extends Review {
+  company: string
+}
+
+export interface AdminReviewResponse {
+  reviews: AdminReview[]
+  total_reviews: number
+}
+
 export interface AdminServiceResponse {
   services: AdminService[]
   total_services: number

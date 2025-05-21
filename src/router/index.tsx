@@ -28,6 +28,7 @@ import ProviderProfile from '@/pages/ProviderProfile'
 import SearchResults from '@/pages/SearchResult'
 import { createBrowserRouter } from 'react-router-dom'
 import ChatPage from '@/pages/dashboard/ChatPage'
+import ReviewManagement from '@/pages/dashboard/admin/ReviewManagement'
 
 const router = createBrowserRouter([
   {
@@ -134,6 +135,10 @@ const router = createBrowserRouter([
           {
             path: 'services',
             element: <ServiceManagement />
+          },
+          {
+            path: 'reviews',
+            element: <ReviewManagement />
           },
           {
             path: 'settings',

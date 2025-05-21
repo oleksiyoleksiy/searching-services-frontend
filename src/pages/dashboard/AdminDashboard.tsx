@@ -5,7 +5,8 @@ import {
   Bell, LogOut, Settings, BarChart2,
   ChevronRight,
   ChevronLeft,
-  Home
+  Home,
+  MessageSquare
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -123,6 +124,18 @@ const AdminDashboard = () => {
                 {sidebarOpen && <span className="ml-3">Services</span>}
               </Link>
             </li>
+            <li>
+              <Link
+                to="/admin/dashboard/reviews"
+                className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/services")
+                  ? "bg-localfind-50 text-localfind-700"
+                  : "hover:bg-gray-100"
+                  }`}
+              >
+                <MessageSquare className="h-5 w-5" />
+                {sidebarOpen && <span className="ml-3">Reviews</span>}
+              </Link>
+            </li>
 
             <li>
               <Link
@@ -203,6 +216,16 @@ const AdminDashboard = () => {
                     >
                       <ShoppingBag className="h-5 w-5 mr-3" />
                       <span>Services</span>
+                    </Link>
+                    <Link
+                      to="/admin/dashboard/reviews"
+                      className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/services")
+                        ? "bg-localfind-50 text-localfind-700"
+                        : "hover:bg-gray-100"
+                        }`}
+                    >
+                      <MessageSquare className="h-5 w-5 mr-3" />
+                      <span>Reviews</span>
                     </Link>
                     <Link
                       to="/admin/dashboard/settings"

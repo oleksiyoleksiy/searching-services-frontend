@@ -69,7 +69,7 @@ const ProviderReviews = () => {
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Avatar className="h-8 w-8">
-                        <img src={review.user.avatar} alt={review.user.name} />
+                        <img className='object-cover object-center' src={review.user.avatar} alt={review.user.name} />
                       </Avatar>
                       <span>{review.user.name}</span>
                     </div>
