@@ -29,7 +29,6 @@ const UserHome = () => {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Section */}
       <section className="bg-white p-6 rounded-lg shadow-sm">
         <div className="flex items-center justify-between">
           <div>
@@ -80,11 +79,6 @@ const UserHome = () => {
                   <span>{booking.date} at {booking.start_time}</span>
                 </div>
               </CardContent>
-              <CardFooter className="pt-1">
-                <Button variant="outline" className="w-full">
-                  View Details
-                </Button>
-              </CardFooter>
             </Card>
           ))}
         </div>

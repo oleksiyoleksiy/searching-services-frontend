@@ -137,46 +137,16 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Featured Providers Section */}
-        {/* <section className="py-12 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                Featured Service Providers
-              </h2>
-              <Button
-                variant="ghost"
-                className="text-localfind-600 hidden md:flex items-center"
-              >
-                View All
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="provider-grid">
-              {featuredProviders.map(provider => (
-                <ServiceCard key={provider.id} provider={provider} />
-              ))}
-            </div>
-
-            <div className="mt-8 text-center md:hidden">
-              <Button variant="outline" className="text-localfind-600">
-                View All Featured Providers
-              </Button>
-            </div>
-          </div>
-        </section> */}
-
-        {/* Popular Services Section */}
         <section className="py-12 bg-white">
           <div className="container mx-auto px-4">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                Popular Services
+                Popular Providers
               </h2>
               <Button
                 variant="ghost"
                 className="text-localfind-600 hidden md:flex items-center"
+                onClick={() => navigate('/categories')}
               >
                 Explore More
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -187,15 +157,6 @@ const Home = () => {
               {providers.map(provider => (
                 <ServiceCard key={provider.id} provider={provider} />
               ))}
-            </div>
-
-            <div className="mt-8 text-center">
-              <Button
-                className="bg-localfind-600 hover:bg-localfind-700"
-                size="lg"
-              >
-                Find Services Near You
-              </Button>
             </div>
           </div>
         </section>

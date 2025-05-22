@@ -45,7 +45,20 @@ const ChatPage = () => {
       const response = await messageService.store(Number(selectedChatId), formData)
 
       if (response) {
-        setMessageResponses(prev => prev.map(m => m.date === response.date ? { ...m, messages: [...m.messages, response.message] } : m))
+        setMessageResponses(prev => {
+          const index = prev.findIndex(r => r.date === response.date);
+          if (index !== -1) {
+            const updated = [...prev];
+            updated[index] = {
+              ...updated[index],
+              messages: [...updated[index].messages, response.message]
+            };
+            return updated;
+          } else {
+            return [...prev, { date: response.date, messages: [response.message] }];
+          }
+        });
+        
         setFormData({ content: '' });
       }
     } catch (e: any) {
@@ -87,26 +100,23 @@ const ChatPage = () => {
 
       chats.forEach((chat) =>
         echo.channel(`chat.${chat.id}`)
-          // .here((users: User[]) => {
-          //   console.log('Users in chat:', users);
-          // })
-          // .joining((user: User) => {
-          //   console.log('User joined:', user);
-          // })
-          // .leaving((user: User) => {
-          //   console.log('User left:', user);
-          // })
           .listen('.MessageSentEvent', (e: EventResponse) => {
             if (e.data.message.user_id === user?.id) return
 
             if (e.chat_id === selectedChatId) {
-              setMessageResponses(prev =>
-                prev.map(r =>
-                  r.date === e.data.date
-                    ? { ...r, messages: [...r.messages, e.data.message] }
-                    : r
-                )
-              );
+              setMessageResponses(prev => {
+                const index = prev.findIndex(r => r.date === e.data.date);
+                if (index !== -1) {
+                  const updated = [...prev];
+                  updated[index] = {
+                    ...updated[index],
+                    messages: [...updated[index].messages, e.data.message]
+                  };
+                  return updated;
+                } else {
+                  return [...prev, { date: e.data.date, messages: [e.data.message] }];
+                }
+              });
             }
 
             setChats(prev =>
