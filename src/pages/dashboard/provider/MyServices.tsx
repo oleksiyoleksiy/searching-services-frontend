@@ -22,6 +22,7 @@ import { Plus, Edit, Trash } from 'lucide-react';
 import providerServiceService from '@/services/provider/providerServiceService';
 import { ProviderService, Service, ServiceErrors } from '@/types';
 import ServiceDeleteModal from '@/components/ServiceDeleteModal';
+import Loader from '@/components/ui/loader';
 
 
 
@@ -31,6 +32,7 @@ const MyServices = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentService, setCurrentService] = useState<ProviderService>();
   const [errors, setErrors] = useState<ServiceErrors>({});
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleCreateService = () => {
     setCurrentService(undefined);
@@ -65,7 +67,7 @@ const MyServices = () => {
   }
 
   useEffect(() => {
-    fetchServices()
+    fetchServices().finally(() => setIsLoading(false))
   }, [])
 
   const handleSaveService = async (serviceData: any) => {
@@ -88,6 +90,8 @@ const MyServices = () => {
       setErrors(e.response?.data?.errors);
     }
   };
+
+  if (isLoading) return <Loader />
 
   return (
     <div className="space-y-6">

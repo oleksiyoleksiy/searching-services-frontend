@@ -48,7 +48,7 @@ const ReviewManagement = () => {
   //   setSearch(value);
   // };
 
-  const fetchServices = async () => {
+  const fetchReviews = async () => {
     setIsLoading(true)
 
     const response = await adminReviewService.index(searchParams.toString())
@@ -62,7 +62,7 @@ const ReviewManagement = () => {
   }
 
   useEffect(() => {
-    fetchServices().finally(() => setIsLoading(false))
+    fetchReviews().finally(() => setIsLoading(false))
   }, [])
 
   const handleDeleteButtonClick = async (review: AdminReview) => {
@@ -107,7 +107,7 @@ const ReviewManagement = () => {
     <div>
       <h1 className="text-3xl font-bold mb-6">Service Management</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {
           Object.values(reviewsStats).map(({ title, value, icon: Icon, colorClass }) => (
 

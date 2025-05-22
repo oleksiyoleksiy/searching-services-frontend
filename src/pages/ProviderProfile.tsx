@@ -74,7 +74,7 @@ const ProviderProfile = () => {
       return;
     }
 
-    setSignInModalOpen(true);
+    setReviewModalOpen(true);
   };
 
   const handleSaveButtonClick = async () => {

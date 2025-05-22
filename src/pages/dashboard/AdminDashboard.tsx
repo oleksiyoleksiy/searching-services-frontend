@@ -7,7 +7,8 @@ import {
   ChevronLeft,
   Home,
   MessageSquare,
-  UserCog2
+  UserCog2,
+  LayoutGrid
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -92,7 +93,12 @@ const AdminDashboard = () => {
             <li>
               <Link
                 to="/admin/dashboard"
-                className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard") && !isActive("/admin/dashboard/users") && !isActive("/admin/dashboard/services") && !isActive("/admin/dashboard/notifications") && !isActive("/admin/dashboard/settings")
+                className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard")
+                  && !isActive("/admin/dashboard/users")
+                  && !isActive("/admin/dashboard/services")
+                  && !isActive("/admin/dashboard/categories")
+                  && !isActive("/admin/dashboard/settings")
+                  && !isActive("/admin/dashboard/reviews")
                   ? "bg-localfind-50 text-localfind-700"
                   : "hover:bg-gray-100"
                   }`}
@@ -115,6 +121,18 @@ const AdminDashboard = () => {
             </li>
             <li>
               <Link
+                to="/admin/dashboard/categories"
+                className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/categories")
+                  ? "bg-localfind-50 text-localfind-700"
+                  : "hover:bg-gray-100"
+                  }`}
+              >
+                <LayoutGrid className="h-5 w-5" />
+                {sidebarOpen && <span className="ml-3">Categories</span>}
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/admin/dashboard/services"
                 className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/services")
                   ? "bg-localfind-50 text-localfind-700"
@@ -128,7 +146,7 @@ const AdminDashboard = () => {
             <li>
               <Link
                 to="/admin/dashboard/reviews"
-                className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/services")
+                className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/reviews")
                   ? "bg-localfind-50 text-localfind-700"
                   : "hover:bg-gray-100"
                   }`}
@@ -190,7 +208,12 @@ const AdminDashboard = () => {
                   <div className="flex flex-col gap-2 p-2 bg-white rounded-md shadow-sm">
                     <Link
                       to="/admin/dashboard"
-                      className={`flex items-center px-3 py-2 rounded-md transition-colors ${isActive("/admin/dashboard") && !isActive("/admin/dashboard/users") && !isActive("/admin/dashboard/services") && !isActive("/admin/dashboard/notifications") && !isActive("/admin/dashboard/settings")
+                      className={`flex items-center px-3 py-2 rounded-md transition-colors ${isActive("/admin/dashboard")
+                        && !isActive("/admin/dashboard/users")
+                        && !isActive("/admin/dashboard/services")
+                        && !isActive("/admin/dashboard/categories")
+                        && !isActive("/admin/dashboard/settings")
+                        && !isActive("/admin/dashboard/reviews")
                         ? "bg-localfind-50 text-localfind-700"
                         : "hover:bg-gray-100"
                         }`}
@@ -209,6 +232,16 @@ const AdminDashboard = () => {
                       <span>Users</span>
                     </Link>
                     <Link
+                      to="/admin/dashboard/categories"
+                      className={`flex items-center px-3 py-2 rounded-md transition-colors ${isActive("/admin/dashboard/categories")
+                        ? "bg-localfind-50 text-localfind-700"
+                        : "hover:bg-gray-100"
+                        }`}
+                    >
+                      <LayoutGrid className="h-5 w-5 mr-3" />
+                      <span>Categories</span>
+                    </Link>
+                    <Link
                       to="/admin/dashboard/services"
                       className={`flex items-center px-3 py-2 rounded-md transition-colors ${isActive("/admin/dashboard/services")
                         ? "bg-localfind-50 text-localfind-700"
@@ -220,7 +253,7 @@ const AdminDashboard = () => {
                     </Link>
                     <Link
                       to="/admin/dashboard/reviews"
-                      className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/services")
+                      className={`flex items-center px-4 py-3 rounded-md transition-colors ${isActive("/admin/dashboard/reviews")
                         ? "bg-localfind-50 text-localfind-700"
                         : "hover:bg-gray-100"
                         }`}

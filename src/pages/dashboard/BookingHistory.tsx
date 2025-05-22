@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Calendar, Clock } from "lucide-react";
 import { Booking, BookingStatus } from "@/types";
 import bookingService from "@/services/bookingService";
+import Loader from "@/components/ui/loader";
 
 interface Status {
   status: BookingStatus;
@@ -55,6 +56,7 @@ const getStatusColor = (status: BookingStatus) => {
 const BookingHistory = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const filteredBookings = activeFilter === "all"
     ? bookings
@@ -81,8 +83,10 @@ const BookingHistory = () => {
   }
 
   useEffect(() => {
-    fetchBookings()
+    fetchBookings().finally(() => setIsLoading(false))
   }, [])
+
+  if (isLoading) return <Loader />
 
   return (
     <div className="space-y-6">

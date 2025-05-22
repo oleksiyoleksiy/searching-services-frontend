@@ -26,7 +26,15 @@ const AllCategories = () => {
     const response = await categoryService.index()
 
     if (response) {
-      setCategories(response.map(c => ({ ...c, icon: categoryIcons[c.id]?.icon, color: categoryIcons[c.id]?.color, to: `/category/${c.id}` })))
+      setCategories(response.map(c => {
+        const categoryIcon = categoryIcons[c.id] ?? categoryIcons[0]
+
+        return {
+          ...c, icon: categoryIcon?.icon,
+          color: categoryIcon?.color,
+          to: `/category/${c.id}`
+        }
+      }))
     }
   }
 

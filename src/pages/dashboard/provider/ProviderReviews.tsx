@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import providerReviewService from '@/services/provider/providerReviewService';
 import { Review } from '@/types';
 import { useEffect, useState } from 'react';
+import Loader from '@/components/ui/loader';
 
 
 
@@ -30,6 +31,7 @@ const renderStars = (rating: number) => {
 
 const ProviderReviews = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchReviews = async () => {
     const response = await providerReviewService.index()
@@ -40,8 +42,10 @@ const ProviderReviews = () => {
   }
 
   useEffect(() => {
-    fetchReviews()
+    fetchReviews().finally(() => setIsLoading(false))
   }, [])
+
+  if (isLoading) return <Loader />
 
   return (
     <div className="space-y-6">

@@ -11,6 +11,7 @@ import {
   ShoppingBag,
   Music,
   Code2,
+  Shapes,
 } from 'lucide-react'
 
 export const categories = [
@@ -97,6 +98,10 @@ export const categories = [
 ]
 
 export const categoryIcons: Record<number, { icon: ReactNode, color: string }> = {
+  0: {
+    icon: <Shapes className="h-8 w-8" />,
+    color: 'bg-red-100'
+  },
   1: {
     icon: <Scissors className="h-8 w-8" />,
     color: 'bg-pink-100',

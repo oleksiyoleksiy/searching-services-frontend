@@ -10,12 +10,13 @@ import { authActions } from '@/store/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import ImageUpload from '@/components/ImageUpload';
-import { Category, ProviderProfileData } from '@/types';
+import { BusinessHours, Category, ProviderProfileData, TimeSlot } from '@/types';
 import categoryService from '@/services/categoryService';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import providerCompanyService from '@/services/provider/providerCompanyService';
+import Loader from '@/components/ui/loader';
 
 interface Errors {
   preview?: string[]
@@ -41,29 +42,14 @@ interface Errors {
   'business_hours.6.end'?: string[]
 }
 
-interface TimeSlot {
-  start: string;
-  end: string;
-}
-
-interface BusinessHours {
-  0: TimeSlot | null;
-  1: TimeSlot | null;
-  2: TimeSlot | null;
-  3: TimeSlot | null;
-  4: TimeSlot | null;
-  5: TimeSlot | null;
-  6: TimeSlot | null;
-}
-
 const weekdays = [
-  { id: 0, label: "Monday" },
-  { id: 1, label: "Tuesday" },
-  { id: 2, label: "Wednesday" },
-  { id: 3, label: "Thursday" },
-  { id: 4, label: "Friday" },
-  { id: 5, label: "Saturday" },
-  { id: 6, label: "Sunday" }
+  { id: 1, label: "Monday" },
+  { id: 2, label: "Tuesday" },
+  { id: 3, label: "Wednesday" },
+  { id: 4, label: "Thursday" },
+  { id: 5, label: "Friday" },
+  { id: 6, label: "Saturday" },
+  { id: 0, label: "Sunday" }
 ];
 
 const timeOptions = Array.from({ length: 24 }).map((_, index) => {
@@ -81,7 +67,7 @@ const CompanyProfile = () => {
   const [errors, setErrors] = useState<Errors>({});
   const { user } = useSelector((s: RootState) => s.auth)
   const [preview, setPreview] = useState<string | undefined>()
-
+  const [isLoading, setIsLoading] = useState(true)
   const [profileData, setProfileData] = useState<ProviderProfileData>({
     name: '',
     categories: [],
@@ -119,6 +105,7 @@ const CompanyProfile = () => {
   }, [user])
 
   const fetchCategories = async () => {
+    setIsLoading(true)
     const response = await categoryService.index()
 
     if (response) {
@@ -127,6 +114,8 @@ const CompanyProfile = () => {
   }
 
   const fetchCompanyInfo = async () => {
+    setIsLoading(true)
+
     const response = await providerCompanyService.index()
 
     if (response) {
@@ -157,7 +146,7 @@ const CompanyProfile = () => {
   }
 
   useEffect(() => {
-    fetchCategories()
+    fetchCategories().finally(() => setIsLoading(false))
     fetchCompanyInfo()
   }, [])
 
@@ -291,6 +280,8 @@ const CompanyProfile = () => {
       ))}
     </div>
   }
+
+  if (isLoading) return <Loader />
 
   return (
     <div className="space-y-6">

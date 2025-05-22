@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 import { Check, UserX2, X } from 'lucide-react';
 import { BookingStatus, ProviderBooking } from '@/types';
 import providerBookingService from '@/services/provider/providerBookingService';
+import Loader from '@/components/ui/loader';
 
 interface Status {
   status: BookingStatus
@@ -51,6 +52,7 @@ const statuses: Status[] = [
 const ManageBookings = () => {
   const [bookings, setBookings] = useState<ProviderBooking[]>([]);
   const [activeTab, setActiveTab] = useState<string>('all');
+  const [isLoading, setIsLoading] = useState(true)
 
   const filteredBookings = activeTab === 'all'
     ? bookings
@@ -75,12 +77,14 @@ const ManageBookings = () => {
   }
 
   useEffect(() => {
-    fetchBookings()
+    fetchBookings().finally(() => setIsLoading(false))
   }, [])
 
   const getStatusLabel = (status: BookingStatus) => {
     return statuses.find(s => s.status === status)?.label || "Unknown";
   }
+
+  if (isLoading) return <Loader />
 
   return (
     <div className="space-y-6">

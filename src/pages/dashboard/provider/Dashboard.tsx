@@ -10,6 +10,7 @@ import { RootState } from '@/store';
 import { useNavigate } from 'react-router-dom';
 import providerStatsService from '@/services/provider/providerStatsService';
 import { ProviderStats } from '@/types';
+import Loader from '@/components/ui/loader';
 
 interface Stats {
   title: string
@@ -22,6 +23,7 @@ const Dashboard = () => {
   // Mock user data
   const { user } = useSelector((s: RootState) => s.auth)
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(true)
   // Mock statistics
   const [stats, setStats] = useState<Stats[]>([
     { title: "New Requests", key: 'requests', value: 0, icon: Bell },
@@ -43,8 +45,9 @@ const Dashboard = () => {
     }
   }
 
-  useEffect(() => { fetchStats() }, [])
+  useEffect(() => { fetchStats().finally(() => setIsLoading(false)) }, [])
 
+  if (isLoading) return <Loader />
 
   return (
     <div className="space-y-6">

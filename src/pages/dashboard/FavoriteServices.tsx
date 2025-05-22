@@ -7,6 +7,7 @@ import favoriteService from "@/services/favoriteService";
 import BookingModal from "@/components/BookingModal";
 import serviceService from "@/services/serviceService";
 import { useNavigate } from "react-router-dom";
+import Loader from "@/components/ui/loader";
 
 interface FavoriteService extends Company {
   is_favorite: boolean;
@@ -17,6 +18,7 @@ const FavoriteServices = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<FavoriteService>();
   const [services, setServices] = useState<Service[]>();
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate()
 
   const fetchFavorites = async () => {
@@ -47,7 +49,7 @@ const FavoriteServices = () => {
   };
 
   useEffect(() => {
-    fetchFavorites();
+    fetchFavorites().finally(() => setIsLoading(false))
   }, []);
 
   const fetchServices = async () => {
@@ -64,6 +66,8 @@ const FavoriteServices = () => {
       fetchServices();
     }
   }, [bookingModalOpen, selectedProvider]);
+
+  if (isLoading) return <Loader />
 
   return (
     <div className="space-y-6">

@@ -28,6 +28,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import ChatPage from '@/pages/dashboard/ChatPage'
 import ReviewManagement from '@/pages/dashboard/admin/ReviewManagement'
 import CompanyProfile from '@/pages/dashboard/provider/CompanyProfile'
+import CategoryManagement from '@/pages/dashboard/admin/CategoryManagement'
 
 const router = createBrowserRouter([
   {
@@ -150,6 +151,10 @@ const router = createBrowserRouter([
           {
             path: 'reviews',
             element: <ReviewManagement />
+          },
+          {
+            path: 'categories',
+            element: <CategoryManagement />
           },
           {
             path: 'settings',

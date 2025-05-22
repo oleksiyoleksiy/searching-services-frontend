@@ -1,9 +1,5 @@
 import axiosInstance from '../../api/axiosInstance'
-import { AdminCategoryResponse, AdminReviewResponse, AdminServiceData, AdminServiceResponse, AdminUserData, AdminUserResponse, Pagination, ProviderStats, Review, User } from '../../types'
-
-interface AdminCategoryData {
-  name: string
-}
+import { AdminCategoryData, AdminCategoryResponse, AdminReviewResponse, AdminServiceData, AdminServiceResponse, AdminUserData, AdminUserResponse, Pagination, ProviderStats, Review, User } from '../../types'
 
 interface Service {
   index: (params?: string) => Promise<Pagination<AdminCategoryResponse> | undefined>

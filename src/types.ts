@@ -104,12 +104,12 @@ export interface User {
   postal_code: string
 }
 
-interface TimeSlot {
+export interface TimeSlot {
   start: string;
   end: string;
 }
 
-interface BusinessHours {
+export interface BusinessHours {
   0: TimeSlot | null;
   1: TimeSlot | null;
   2: TimeSlot | null;
@@ -332,4 +332,12 @@ export interface AdminServiceData {
 export interface AdminCategoryResponse {
   categories: Category[]
   total_categories: number
+}
+
+export interface AdminCategoryData {
+  name: string
+}
+
+export interface AdminCategoryErrors {
+  name?: string[]
 }

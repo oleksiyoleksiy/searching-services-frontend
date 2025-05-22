@@ -13,6 +13,7 @@ import chatService from '@/services/chatService';
 import { useEcho } from '@/hooks/useEcho';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import Loader from '@/components/ui/loader';
 
 interface EventResponse {
   chat_id: number
@@ -23,6 +24,7 @@ const ChatPage = () => {
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const [messageResponses, setMessageResponses] = useState<MessageResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     content: ''
   });
@@ -38,11 +40,17 @@ const ChatPage = () => {
   const handleSendMessage = async () => {
     if (!formData.content.trim() || !selectedChatId) return;
 
-    const response = await messageService.store(Number(selectedChatId), formData)
+    try {
 
-    if (response) {
-      setMessageResponses(prev => prev.map(m => m.date === response.date ? { ...m, messages: [...m.messages, response.message] } : m))
-      setFormData({ content: '' });
+      const response = await messageService.store(Number(selectedChatId), formData)
+
+      if (response) {
+        setMessageResponses(prev => prev.map(m => m.date === response.date ? { ...m, messages: [...m.messages, response.message] } : m))
+        setFormData({ content: '' });
+      }
+    } catch (e: any) {
+      console.log(e);
+
     }
 
   };
@@ -70,7 +78,7 @@ const ChatPage = () => {
   }, [selectedChatId])
 
   useEffect(() => {
-    fetchChats()
+    fetchChats().finally(() => setIsLoading(false))
   }, [])
 
   useEffect(() => {
@@ -118,7 +126,7 @@ const ChatPage = () => {
       }
     } catch (e: any) {
       console.log(e);
-      
+
     };
 
   }, [accessToken, chats, selectedChatId]);
@@ -132,6 +140,8 @@ const ChatPage = () => {
   }, [messageResponses])
 
   const selectedChat = chats.find(c => c.id === selectedChatId)
+
+  if (isLoading) return <Loader />
 
   return (
     <div className="space-y-6">

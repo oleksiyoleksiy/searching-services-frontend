@@ -104,12 +104,12 @@ const AboutPage = () => {
               <div className="bg-white p-6 rounded-lg shadow-sm text-center">
                 <div className="w-24 h-24 rounded-full bg-gray-200 mx-auto mb-4 overflow-hidden">
                   <img
-                    src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-1.2.1&auto=format&fit=crop&w=150"
+                    src="https://res.cloudinary.com/jerrick/image/upload/d_642250b563292b35f27461a7.png,f_jpg,fl_progressive,q_auto,w_1024/6483bb973b8f65001ea4755f.jpg"
                     alt="Team member"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <h3 className="text-xl font-semibold mb-1">Jane Smith</h3>
+                <h3 className="text-xl font-semibold mb-1">Oleksiy Oleksiy</h3>
                 <p className="text-localfind-600 mb-3">Founder & CEO</p>
                 <p className="text-gray-600">Passionate about connecting communities and supporting local businesses.</p>
               </div>
